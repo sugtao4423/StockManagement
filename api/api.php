@@ -1,5 +1,6 @@
 <?php
-require('./StockGroup.php');
+require_once('./StockGroup.php');
+require_once('./Utils.php');
 
 define('DB_LOCATION', './database.sqlite3');
 
@@ -20,7 +21,7 @@ switch($_SERVER['REQUEST_METHOD']){
 }
 
 if($result === null){
-    $result = getErrorJson('invalid parameter.');
+    $result = Utils::getErrorJson('invalid parameter.');
     http_response_code(501);
 }else{
     if($result['success'] == true){
