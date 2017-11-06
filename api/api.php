@@ -1,5 +1,6 @@
 <?php
 require_once('./StockGroup.php');
+require_once('./Stock.php');
 require_once('./Utils.php');
 
 define('DB_LOCATION', './database.sqlite3');
@@ -39,6 +40,8 @@ function doPost(){
         switch($_POST['f']){
         case 'create_group':
             return (new StockGroup($db))->createStockGroup($_POST['group_name']);
+        case 'create_stock':
+            return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['exists']);
         }
     }
     return null;
@@ -50,6 +53,8 @@ function doGet(){
         switch($_GET['f']){
         case 'get_groups':
             return (new StockGroup($db))->getStockGroups();
+        case 'get_stocks':
+            return (new Stock($db))->getStocks($_GET['group_name']);
         }
     }
     return null;
@@ -62,6 +67,8 @@ function doDelete(){
         switch($_DELETE['f']){
         case 'delete_group':
             return (new StockGroup($db))->deleteStockGroup($_DELETE['group_name']);
+        case 'delete_stock':
+            return (new Stock($db))->deleteStock($_DELETE['group_name'], $_DELETE['id']);
         }
     }
     return null;
