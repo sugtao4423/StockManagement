@@ -10,6 +10,9 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'POST':
         $result = doPost();
         break;
+    case 'GET':
+        $result = doGet();
+        break;
     case 'DELETE':
         $result = doDelete();
         break;
@@ -38,6 +41,16 @@ function doPost(){
     return null;
 }
 
+function doGet(){
+    if(isset($_GET['f'])){
+        switch($_GET['f']){
+        case 'get_groups':
+            return getStockGroups();
+        }
+    }
+    return null;
+}
+
 function doDelete(){
     parse_str(file_get_contents('php://input'), $_DELETE);
     if(isset($_DELETE['f'])){
@@ -60,6 +73,18 @@ function createStockGroup($groupName = null){
     }else{
         return getErrorJson('SQLite3 error. could not create table.');
     }
+}
+
+function getStockGroups(){
+    global $db;
+    $tablesquery = $db->query("SELECT name FROM sqlite_master WHERE type='table'");
+    if(!$tablesquery){
+        return getErrorJson('SQLite3 error. could not get stock groups.');
+    }
+    $result = array('success' => true, 'stock_groups' => array());
+    while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC))
+        array_push($result['stock_groups'], $table['name']);
+    return $result;
 }
 
 function deleteStockGroup($groupName = null){
