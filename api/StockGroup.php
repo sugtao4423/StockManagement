@@ -13,7 +13,7 @@ class StockGroup{
         if($groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = str_replace("'", "''", $groupName);
+        $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, 'exists' INTEGER)")){
             return Utils::getSuccessJson();
         }else{
@@ -36,11 +36,11 @@ class StockGroup{
         if($groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = str_replace("'", "''", $groupName);
+        $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("DROP TABLE '${groupName}'")){
             return Utils::getSuccessJson();
         }else{
-            return Utils::getErrorJson('SQLite3 error. could not drop table');
+            return Utils::getErrorJson('SQLite3 error. could not drop table.');
         }
     }
 
