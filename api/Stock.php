@@ -15,11 +15,7 @@ class Stock{
         }
         $groupName = Utils::sqlEscape($groupName);
         $stockName = Utils::sqlEscape($stockName);
-        if($exists == true or $exists > 0){
-            $exists = 1;
-        }else{
-            $exists = 0;
-        }
+        $exists = Utils::getNumFromBool($exists);
         if($this->db->exec("INSERT INTO '${groupName}' (name, 'exists') values('${stockName}', ${exists})")){
             return Utils::getSuccessJson();
         }else{
@@ -38,11 +34,24 @@ class Stock{
         }
         $result = array('success' => true, 'stocks' => array());
         while ($q = $query->fetchArray(SQLITE3_ASSOC)){
-            $exists = $q['exists'] === 1;
+            $exists = Utils::getBoolFromNum($q['exists']);
             array_push($result['stocks'],
                 array('id' => $q['id'], 'name' => $q['name'], 'exists' => $exists));
         }
         return $result;
+    }
+
+    public function updateStock($groupName = null, $id = null, $exists = false){
+        if($groupName === null or $id === null){
+            return Utils::getErrorJson('invalid parameter.');
+        }
+        $groupName = Utils::sqlEscape($groupName);
+        $exists = Utils::getNumFromBool($exists);
+        if($this->db->exec("UPDATE '${groupName}' SET 'exists'=${exists} WHERE id=${id}")){
+            return Utils::getSuccessJson();
+        }else{
+            return Utils::getErrorJson('SQLite3 error. could not update stock.');
+        }
     }
 
     public function deleteStock($groupName = null, $id = null){

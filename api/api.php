@@ -16,6 +16,9 @@ switch($_SERVER['REQUEST_METHOD']){
     case 'GET':
         $result = doGet();
         break;
+    case 'PUT':
+        $result = doPut();
+        break;
     case 'DELETE':
         $result = doDelete();
         break;
@@ -55,6 +58,18 @@ function doGet(){
             return (new StockGroup($db))->getStockGroups();
         case 'get_stocks':
             return (new Stock($db))->getStocks($_GET['group_name']);
+        }
+    }
+    return null;
+}
+
+function doPut(){
+    global $db;
+    parse_str(file_get_contents('php://input'), $_PUT);
+    if(isset($_PUT['f'])){
+        switch($_PUT['f']){
+        case 'update_stock':
+            return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['exists']);
         }
     }
     return null;
