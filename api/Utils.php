@@ -13,8 +13,12 @@ class Utils{
         return ($num == true or $num > 0);
     }
 
-    public static function getSuccessJson(){
-        return array('success' => true);
+    public static function getSuccessJson($dataName = null, $data = null){
+        if($dataName === null or $data === null){
+            return array('success' => true);
+        }else{
+            return array('success' => true, $dataName => $data);
+        }
     }
 
     public static function getErrorJson($message){

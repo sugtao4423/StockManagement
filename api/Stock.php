@@ -17,7 +17,7 @@ class Stock{
         $stockName = Utils::sqlEscape($stockName);
         $exists = Utils::getNumFromBool($exists);
         if($this->db->exec("INSERT INTO '${groupName}' (name, 'exists') values('${stockName}', ${exists})")){
-            return Utils::getSuccessJson();
+            return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not add stock.');
         }
@@ -32,7 +32,7 @@ class Stock{
         if(!$query){
             return Utils::getErrorJson('SQLite3 error. could not get stocks.');
         }
-        $result = array('success' => true, 'stocks' => array());
+        $result = Utils::getSuccessJson('stocks', array());
         while ($q = $query->fetchArray(SQLITE3_ASSOC)){
             $exists = Utils::getBoolFromNum($q['exists']);
             array_push($result['stocks'],
@@ -48,7 +48,7 @@ class Stock{
         $groupName = Utils::sqlEscape($groupName);
         $exists = Utils::getNumFromBool($exists);
         if($this->db->exec("UPDATE '${groupName}' SET 'exists'=${exists} WHERE id=${id}")){
-            return Utils::getSuccessJson();
+            return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not update stock.');
         }
@@ -60,7 +60,7 @@ class Stock{
         }
         $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("DELETE FROM '${groupName}' WHERE id=${id}")){
-            return Utils::getSuccessJson();
+            return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not delete stock.');
         }

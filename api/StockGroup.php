@@ -15,7 +15,7 @@ class StockGroup{
         }
         $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, 'exists' INTEGER)")){
-            return Utils::getSuccessJson();
+            return $this->getStockGroups();
         }else{
             return Utils::getErrorJson('SQLite3 error. could not create table.');
         }
@@ -26,7 +26,7 @@ class StockGroup{
         if(!$tablesquery){
             return Utils::getErrorJson('SQLite3 error. could not get stock groups.');
         }
-        $result = array('success' => true, 'stock_groups' => array());
+        $result = Utils::getSuccessJson('stock_groups', array());
         while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC))
             array_push($result['stock_groups'], $table['name']);
         return $result;
@@ -38,7 +38,7 @@ class StockGroup{
         }
         $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("DROP TABLE '${groupName}'")){
-            return Utils::getSuccessJson();
+            return $this->getStockGroups();
         }else{
             return Utils::getErrorJson('SQLite3 error. could not drop table.');
         }
