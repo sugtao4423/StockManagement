@@ -27,8 +27,10 @@ class StockGroup{
             return Utils::getErrorJson('SQLite3 error. could not get stock groups.');
         }
         $result = Utils::getSuccessJson('stock_groups', array());
-        while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC))
-            array_push($result['stock_groups'], $table['name']);
+        while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)){
+            $itemCount = $this->db->querySingle("SELECT COUNT(*) FROM {$table['name']}");
+            array_push($result['stock_groups'], array('name' => $table['name'], 'itemCount' => $itemCount));
+        }
         return $result;
     }
 
