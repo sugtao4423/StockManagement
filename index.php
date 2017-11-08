@@ -28,6 +28,7 @@ if(Config::$USE_AUTHORIZE){
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link href="./assets/style.css" rel="stylesheet">
+    <script src="./assets/script.js" charset="UTF-8"></script>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -40,6 +41,12 @@ if(Config::$USE_AUTHORIZE){
 
     <div class="container">
         <h1>在庫管理</h1>
+        <?php
+            if(!isset($_GET['group'])){
+                echo '<script>echoStockGroups("content");</script>';
+            }
+        ?>
+        <div id="content"></div>
     </div>
 
   </body>
