@@ -1,7 +1,25 @@
 <?php
+require_once('./Config.php');
+require_once('./Utils.php');
+
+if(Config::$USE_AUTHORIZE){
+    if (!isset($_SERVER['PHP_AUTH_USER'])){
+        header('WWW-Authenticate: Basic realm="Enter username and password."');
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(401);
+        die(json_encode(Utils::getErrorJson('Unauthorized'), JSON_UNESCAPED_UNICODE));
+    }else{
+        if ($_SERVER['PHP_AUTH_USER'] != Config::$USERNAME || $_SERVER['PHP_AUTH_PW'] != Config::$PASSWORD){
+            header('WWW-Authenticate: Basic realm="Enter username and password."');
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(401);
+            die(json_encode(Utils::getErrorJson('Unauthorized'), JSON_UNESCAPED_UNICODE));
+        }
+    }
+}
+
 require_once('./StockGroup.php');
 require_once('./Stock.php');
-require_once('./Utils.php');
 
 define('DB_LOCATION', './database.sqlite3');
 
