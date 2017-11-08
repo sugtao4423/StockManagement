@@ -43,10 +43,11 @@ if(Config::$USE_AUTHORIZE){
         <h1>在庫管理</h1>
         <?php
             if(!isset($_GET['group'])){
-                echo '<script>echoStockGroups("content");</script>';
+                echo '<script>echoStockGroups();</script>';
             }
         ?>
         <div id="content"></div>
+        <button id="addStockGroupBtn" type="button" class="btn btn-info" style="float:right;" onclick="clickAddStockGroup();">Add</button>
     </div>
 
   </body>
