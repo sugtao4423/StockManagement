@@ -28,7 +28,7 @@ class StockGroup{
         }
         $result = Utils::getSuccessJson('stock_groups', array());
         while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)){
-            $itemCount = $this->db->querySingle("SELECT COUNT(*) FROM {$table['name']}");
+            $itemCount = $this->db->querySingle("SELECT COUNT(*) FROM '{$table['name']}'");
             array_push($result['stock_groups'], array('name' => $table['name'], 'itemCount' => $itemCount));
         }
         return $result;
