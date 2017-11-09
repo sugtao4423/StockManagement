@@ -29,7 +29,13 @@ if(Config::$USE_AUTHORIZE){
 
     <link href="./assets/style.css" rel="stylesheet">
     <script src="./assets/js/utils.js" charset="UTF-8"></script>
-    <script src="./assets/js/stockGroup.js" charset="UTF-8"></script>
+    <?php
+        $groupName = isset($_GET['group']) ? $_GET['group'] : null;
+        if(!$groupName)
+            echo '<script src="./assets/js/stockGroup.js" charset="UTF-8"></script>';
+        else
+            echo '<script src="./assets/js/stock.js" charset="UTF-8"></script>';
+    ?>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -42,11 +48,13 @@ if(Config::$USE_AUTHORIZE){
 
     <div class="container">
         <?php
-            if(!isset($_GET['group'])){
+            global $groupName;
+            if(!$groupName){
                 echo '<h1>在庫管理</h1>';
                 echo '<script>echoStockGroups();</script>';
             }else{
                 echo "<h1>{$_GET['group']}</h1>";
+                echo "<script>echoStocks('${groupName}');</script>";
             }
         ?>
         <div id="content"></div>
