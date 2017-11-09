@@ -53,15 +53,16 @@ function stocks2Table(json, groupName){
         checkbox.checked = exists;
     }
 
+    var escGroupName = groupName.replace(/'/g, "\\'");
     var addtr = tbody.insertRow(-1);
     var input = addtr.insertCell(-1).appendChild(document.createElement('input'));
     input.id = NEW_STOCK_INPUT_ID;
     input.style.display = 'none';
-    input.setAttribute('onkeydown', `if(window.event.keyCode == 13) clickAddStock('${groupName}');`);
+    input.setAttribute('onkeydown', `if(window.event.keyCode == 13) clickAddStock('${escGroupName}');`);
     var button = addtr.insertCell(-1).appendChild(document.createElement('button'));
     button.type = 'button';
     button.className = 'btn btn-info';
-    button.setAttribute('onclick', `clickAddStock('${groupName}');`);
+    button.setAttribute('onclick', `clickAddStock('${escGroupName}');`);
     button.innerHTML = 'Add';
 }
 

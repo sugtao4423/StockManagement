@@ -54,15 +54,17 @@ if(Config::$USE_AUTHORIZE){
                 echo '<script>echoStockGroups();</script>';
             }else{
                 echo "<h1>{$_GET['group']}</h1>";
-                echo "<script>echoStocks('${groupName}');</script>";
+                $escName = str_replace("'", "\\'", $groupName);
+                echo "<script>echoStocks('${escName}');</script>";
             }
         ?>
         <div id="content"></div>
         <?php
             global $groupName;
             if($groupName){
+                $escName = str_replace("'", "\\'", $groupName);
                 echo '<div><button type="button" class="btn btn-danger" style="float:right; margin-top: 40px;"';
-                echo "onclick=\"delGroup('${groupName}');\">グループ削除</div>";
+                echo "onclick=\"delGroup('${escName}');\">グループ削除</div>";
             }
         ?>
     </div>
