@@ -45,9 +45,9 @@ class Stock{
         if($groupName === null or $id === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = Utils::sqlEscape($groupName);
+        $escGroupName = Utils::sqlEscape($groupName);
         $exists = Utils::getNumFromBool($exists);
-        if($this->db->exec("UPDATE '${groupName}' SET 'exists'=${exists} WHERE id=${id}")){
+        if($this->db->exec("UPDATE '${escGroupName}' SET 'exists'=${exists} WHERE id=${id}")){
             return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not update stock.');
@@ -58,8 +58,8 @@ class Stock{
         if($groupName === null or $id === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = Utils::sqlEscape($groupName);
-        if($this->db->exec("DELETE FROM '${groupName}' WHERE id=${id}")){
+        $escGroupName = Utils::sqlEscape($groupName);
+        if($this->db->exec("DELETE FROM '${escGroupName}' WHERE id=${id}")){
             return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not delete stock.');
