@@ -22,10 +22,18 @@ function clickAddStock(groupName){
     }
 }
 
+function clickCheckbox(checkbox, groupName){
+    put({'f': 'update_stock', 'group_name': groupName, 'id': checkbox.getAttribute('data-id'), 'exists': checkbox.checked}, function(data){
+        stocks2Table(data, groupName);
+    });
+}
+
 function stocks2Table(json, groupName){
     var tableParent = document.getElementById(TABLE_PARENT_ID);
     while(tableParent.firstChild)
         tableParent.removeChild(tableParent.firstChild);
+
+    var escGroupName = groupName.replace(/'/g, "\\'");
 
     var table = tableParent.appendChild(document.createElement('table'));
     table.id = TABLE_ID;
@@ -51,9 +59,10 @@ function stocks2Table(json, groupName){
         var checkbox = tr.insertCell(-1).appendChild(document.createElement('input'));
         checkbox.type = 'checkbox';
         checkbox.checked = exists;
+        checkbox.setAttribute('data-id', id);
+        checkbox.setAttribute('onclick', `clickCheckbox(this, '${escGroupName}');`);
     }
 
-    var escGroupName = groupName.replace(/'/g, "\\'");
     var addtr = tbody.insertRow(-1);
     var input = addtr.insertCell(-1).appendChild(document.createElement('input'));
     input.id = NEW_STOCK_INPUT_ID;
