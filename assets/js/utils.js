@@ -9,6 +9,10 @@ function post(params, func){
     access('POST', params, func);
 }
 
+function del(params, func){
+    access('DELETE', params, func);
+}
+
 function access(method, params, func){
     $.ajax({
         url: './api/api.php',

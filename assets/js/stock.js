@@ -64,3 +64,11 @@ function stocks2Table(json, groupName){
     button.setAttribute('onclick', `clickAddStock('${groupName}');`);
     button.innerHTML = 'Add';
 }
+
+function delGroup(groupName){
+    if(confirm(groupName + '\n削除してもよろしいですか？')){
+        del({'f': 'delete_stock_group', 'group_name': groupName}, function(data){
+            window.location = window.location.href.split('?')[0];
+        });
+    }
+}
