@@ -28,7 +28,8 @@ if(Config::$USE_AUTHORIZE){
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link href="./assets/style.css" rel="stylesheet">
-    <script src="./assets/script.js" charset="UTF-8"></script>
+    <script src="./assets/js/utils.js" charset="UTF-8"></script>
+    <script src="./assets/js/stockGroup.js" charset="UTF-8"></script>
   </head>
   <body>
     <nav class="navbar navbar-default">

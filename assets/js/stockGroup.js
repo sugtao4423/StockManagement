@@ -1,6 +1,3 @@
-const TABLE_PARENT_ID = 'content';
-const TABLE_ID = 'table';
-
 const NEW_STOCK_GROUP_INPUT_ID = 'newStockGroupInput';
 
 function echoStockGroups(){
@@ -61,24 +58,6 @@ function stockGroup2Table(json){
     button.className = 'btn btn-info';
     button.setAttribute('onclick', 'clickAddStockGroup();');
     button.innerHTML = 'Add';
-}
-
-function get(params, func){
-    access('GET', params, func);
-}
-
-function post(params, func){
-    access('POST', params, func);
-}
-
-function access(method, params, func){
-    $.ajax({
-        url: './api/api.php',
-        type: method,
-        data: params,
-        dataType: 'json',
-        success: func
-    });
 }
 
 function setStockGroupLink(){
