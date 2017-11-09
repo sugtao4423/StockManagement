@@ -40,10 +40,12 @@ if(Config::$USE_AUTHORIZE){
     </nav>
 
     <div class="container">
-        <h1>在庫管理</h1>
         <?php
             if(!isset($_GET['group'])){
+                echo '<h1>在庫管理</h1>';
                 echo '<script>echoStockGroups();</script>';
+            }else{
+                echo "<h1>{$_GET['group']}</h1>";
             }
         ?>
         <div id="content"></div>
