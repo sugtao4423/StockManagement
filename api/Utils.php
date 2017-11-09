@@ -6,7 +6,13 @@ class Utils{
     }
 
     public static function getNumFromBool($bool){
-        return ($bool == true or $bool > 0) ? 1 : 0;
+        if($bool === true or $bool === 'true'){
+            return 1;
+        }else{
+            if(is_int($bool) and $bool > 0)
+                return 1;
+        }
+        return 0;
     }
 
     public static function getBoolFromNum($num){
