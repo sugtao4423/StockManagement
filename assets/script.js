@@ -16,10 +16,12 @@ function clickAddStockGroup(){
             stockGroup2Table(data);
         });
     }else{
-        if(input.style.display == 'none')
+        if(input.style.display == 'none'){
             input.style.display = 'block';
-        else
+            input.focus();
+        }else{
             input.style.display = 'none';
+        }
     }
 }
 
