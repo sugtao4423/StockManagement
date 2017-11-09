@@ -49,7 +49,6 @@ if(Config::$USE_AUTHORIZE){
             }
         ?>
         <div id="content"></div>
-        <button id="addStockGroupBtn" type="button" class="btn btn-info" style="float:right;" onclick="clickAddStockGroup();">Add</button>
     </div>
 
   </body>

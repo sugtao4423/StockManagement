@@ -2,7 +2,6 @@ const TABLE_PARENT_ID = 'content';
 const TABLE_ID = 'table';
 
 const NEW_STOCK_GROUP_INPUT_ID = 'newStockGroupInput';
-const NEW_STOCK_GROUP_INPUT_ROW_ID = 'newStockGroupRow';
 
 function echoStockGroups(){
     get({'f': 'get_stock_groups'}, function(data){
@@ -12,22 +11,15 @@ function echoStockGroups(){
 
 function clickAddStockGroup(){
     var input = document.getElementById(NEW_STOCK_GROUP_INPUT_ID);
-    if(input === null){
-        var table = document.getElementById(TABLE_ID);
-        var tr = table.insertRow(-1);
-        tr.id = NEW_STOCK_GROUP_INPUT_ROW_ID;
-        var text = tr.insertCell(-1).appendChild(document.createElement('input'));
-        text.id = NEW_STOCK_GROUP_INPUT_ID;
-        tr.insertCell(-1);
+    if(input.value.length > 0){
+        post({'f': 'create_stock_group', 'group_name': input.value}, function(data){
+            stockGroup2Table(data);
+        });
     }else{
-        if(input.value.length > 0){
-            post({'f': 'create_stock_group', 'group_name': input.value}, function(data){
-                stockGroup2Table(data);
-            });
-        }else{
-            var inputRow = document.getElementById(NEW_STOCK_GROUP_INPUT_ROW_ID);
-            inputRow.parentNode.removeChild(inputRow);
-        }
+        if(input.style.display == 'none')
+            input.style.display = 'block';
+        else
+            input.style.display = 'none';
     }
 }
 
@@ -56,6 +48,17 @@ function stockGroup2Table(json){
         tr.insertCell(-1).innerHTML = itemCount;
     }
     setStockGroupLink();
+
+    var addtr = tbody.insertRow(-1);
+    var input = addtr.insertCell(-1).appendChild(document.createElement('input'));
+    input.id = NEW_STOCK_GROUP_INPUT_ID;
+    input.style.display = 'none';
+    input.setAttribute('onkeydown', 'if(window.event.keyCode == 13) clickAddStockGroup();');
+    var button = addtr.insertCell(-1).appendChild(document.createElement('button'));
+    button.type = 'button';
+    button.className = 'btn btn-info';
+    button.setAttribute('onclick', 'clickAddStockGroup();');
+    button.innerHTML = 'Add';
 }
 
 function get(params, func){
