@@ -28,7 +28,7 @@ class Stock{
             return Utils::getErrorJson('invalid parameter.');
         }
         $groupName = Utils::sqlEscape($groupName);
-        $query = $this->db->query("SELECT * FROM ${groupName}");
+        $query = $this->db->query("SELECT * FROM '${groupName}'");
         if(!$query){
             return Utils::getErrorJson('SQLite3 error. could not get stocks.');
         }
