@@ -13,10 +13,10 @@ class Stock{
         if($groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = Utils::sqlEscape($groupName);
+        $escGroupName = Utils::sqlEscape($groupName);
         $stockName = Utils::sqlEscape($stockName);
         $exists = Utils::getNumFromBool($exists);
-        if($this->db->exec("INSERT INTO '${groupName}' (name, 'exists') values('${stockName}', ${exists})")){
+        if($this->db->exec("INSERT INTO '${escGroupName}' (name, 'exists') values('${stockName}', ${exists})")){
             return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not add stock.');
