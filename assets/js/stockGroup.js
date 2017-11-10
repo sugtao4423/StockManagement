@@ -61,7 +61,7 @@ function stockGroup2Table(json){
 }
 
 function setStockGroupLink(){
-    var tr = document.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    var tr = document.querySelectorAll('tbody > tr');
     for(var i = 0; i < tr.length; i++){
         tr[i].addEventListener('click', function(){
             window.location = this.getAttribute('data-href');
