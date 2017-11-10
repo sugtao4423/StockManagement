@@ -64,7 +64,7 @@ if(Config::$USE_AUTHORIZE){
             if($groupName){
                 $escName = str_replace("'", "\\'", $groupName);
                 echo '<div><button type="button" class="btn btn-danger" style="float:right; margin-top: 40px;"';
-                echo "onclick=\"delGroup('${escName}');\">グループ削除</div>";
+                echo "onclick=\"delGroup('${escName}');\">グループ削除</button></div>";
             }
         ?>
     </div>
