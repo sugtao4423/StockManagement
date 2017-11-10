@@ -55,7 +55,8 @@ if(Config::$USE_AUTHORIZE){
             }else{
                 echo "<h1>{$_GET['group']}</h1>";
                 $escName = str_replace("'", "\\'", $groupName);
-                echo "<script>echoStocks('${escName}');</script>";
+                echo "<script>const GROUP_NAME = '${escName}';";
+                echo "echoStocks('${escName}');</script>";
             }
         ?>
         <div id="content"></div>
