@@ -1,4 +1,5 @@
 const NEW_STOCK_INPUT_ID = 'newStockInput';
+const EDIT_BTN_ID = 'editBtn';
 
 function echoStocks(groupName){
     get({'f': 'get_stocks', 'group_name': groupName}, function(data){
@@ -60,6 +61,7 @@ function stocks2Table(json, groupName){
         checkbox.type = 'checkbox';
         checkbox.checked = exists;
         checkbox.setAttribute('data-id', id);
+        checkbox.setAttribute('data-name', name);
         checkbox.setAttribute('onclick', `clickCheckbox(this, '${escGroupName}');`);
     }
 
@@ -73,6 +75,57 @@ function stocks2Table(json, groupName){
     button.className = 'btn btn-info';
     button.setAttribute('onclick', `clickAddStock('${escGroupName}');`);
     button.innerHTML = 'Add';
+
+    var isEditing = document.getElementById(EDIT_BTN_ID).getAttribute('data-editing');
+    if(isEditing == 'true'){
+        setStockDelBtn(groupName);
+    }
+}
+
+function clickEditStock(groupName){
+    var editBtn = document.getElementById(EDIT_BTN_ID);
+    var isEditing = editBtn.getAttribute('data-editing');
+    if(isEditing == null || isEditing == 'false'){
+        editBtn.setAttribute('data-editing', true);
+        editBtn.innerHTML = '完了';
+        setStockDelBtn(groupName);
+    }else{
+        editBtn.setAttribute('data-editing', false);
+        editBtn.innerHTML = '編集';
+        clearStockDelBtn();
+    }
+}
+
+function setStockDelBtn(groupName){
+    var checkboxs = document.querySelectorAll('input[type=checkbox]');
+    for(var i = 0; i < checkboxs.length; i++){
+        checkboxs[i].style.display = 'none';
+        var stockDelBtn = checkboxs[i].parentNode.appendChild(document.createElement('button'));
+        stockDelBtn.className = 'btn btn-danger btn-sm';
+        stockDelBtn.setAttribute('data-id', checkboxs[i].getAttribute('data-id'));
+        stockDelBtn.innerHTML = '削除';
+        var escGroupName = groupName.replace(/'/g, "\\'");
+        var escStockName = checkboxs[i].getAttribute('data-name').replace(/'/g, "\\'");
+        var id = checkboxs[i].getAttribute('data-id');
+        stockDelBtn.setAttribute('onclick', `delStock('${escGroupName}', '${escStockName}', ${id});`);
+    }
+}
+
+function clearStockDelBtn(){
+    var stockDelBtns = document.querySelectorAll('button[class="btn btn-danger btn-sm"]');
+    var checkboxs = document.querySelectorAll('input[type=checkbox]');
+    for(var i = 0; i < stockDelBtns.length; i++)
+        stockDelBtns[i].parentNode.removeChild(stockDelBtns[i]);
+    for(var i = 0; i < checkboxs.length; i++)
+        checkboxs[i].style.display = 'block';
+}
+
+function delStock(groupName, stockName, id){
+    if(confirm(stockName + '\n削除してもよろしいですか？')){
+        del({'f': 'delete_stock', 'group_name': groupName, 'id': id}, function(data){
+            stocks2Table(data, groupName);
+        });
+    }
 }
 
 function delGroup(groupName){
