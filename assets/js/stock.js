@@ -24,7 +24,7 @@ function clickAddStock(){
 }
 
 function clickCheckbox(checkbox){
-    put({'f': 'update_stock', 'group_name': GROUP_NAME, 'id': checkbox.getAttribute('data-id'), 'exists': checkbox.checked}, function(data){
+    put({'f': 'update_stock', 'group_name': GROUP_NAME, 'id': checkbox.getAttribute('data-id'), 'have': checkbox.checked}, function(data){
         stocks2Table(data);
     });
 }
@@ -43,21 +43,21 @@ function stocks2Table(json){
     var nametd = tr.appendChild(document.createElement('th'));
     nametd.innerHTML = '名前';
     nametd.className = 'col-xs-10';
-    var existstd = tr.appendChild(document.createElement('th'));
-    existstd.innerHTML = '所持';
-    existstd.className = 'col-xs-2';
+    var havetd = tr.appendChild(document.createElement('th'));
+    havetd.innerHTML = '所持';
+    havetd.className = 'col-xs-2';
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.stocks){
         var id = json.stocks[i].id;
         var name = json.stocks[i].name;
-        var exists = json.stocks[i].exists;
+        var have = json.stocks[i].have;
 
         var tr = tbody.insertRow(-1);
         tr.insertCell(-1).innerHTML = name;
         var checkbox = tr.insertCell(-1).appendChild(document.createElement('input'));
         checkbox.type = 'checkbox';
-        checkbox.checked = exists;
+        checkbox.checked = have;
         checkbox.setAttribute('data-id', id);
         checkbox.setAttribute('data-name', name);
         checkbox.setAttribute('onclick', 'clickCheckbox(this);');
