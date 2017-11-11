@@ -41,7 +41,7 @@ if(Config::$USE_AUTHORIZE){
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand">在庫管理</a>
+                <a class="navbar-brand" href=".">在庫管理</a>
             </div>
         </div>
     </nav>
