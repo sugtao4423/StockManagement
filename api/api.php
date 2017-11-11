@@ -63,7 +63,7 @@ function doPost(){
         case 'create_stock_group':
             return (new StockGroup($db))->createStockGroup($_POST['group_name']);
         case 'create_stock':
-            return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['exists']);
+            return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['have']);
         }
     }
     return null;
@@ -88,7 +88,7 @@ function doPut(){
     if(isset($_PUT['f'])){
         switch($_PUT['f']){
         case 'update_stock':
-            return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['exists']);
+            return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['have']);
         }
     }
     return null;

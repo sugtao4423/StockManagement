@@ -9,14 +9,14 @@ class Stock{
         $this->db = $db;
     }
 
-    public function createStock($groupName = null, $stockName = null, $exists = false){
+    public function createStock($groupName = null, $stockName = null, $have = false){
         if($groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
         $escGroupName = Utils::sqlEscape($groupName);
         $stockName = Utils::sqlEscape($stockName);
-        $exists = Utils::getNumFromBool($exists);
-        if($this->db->exec("INSERT INTO '${escGroupName}' (name, 'exists') values('${stockName}', ${exists})")){
+        $have = Utils::getNumFromBool($have);
+        if($this->db->exec("INSERT INTO '${escGroupName}' (name, have) values('${stockName}', ${have})")){
             return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not add stock.');
@@ -34,20 +34,20 @@ class Stock{
         }
         $result = Utils::getSuccessJson('stocks', array());
         while ($q = $query->fetchArray(SQLITE3_ASSOC)){
-            $exists = Utils::getBoolFromNum($q['exists']);
+            $have = Utils::getBoolFromNum($q['have']);
             array_push($result['stocks'],
-                array('id' => $q['id'], 'name' => $q['name'], 'exists' => $exists));
+                array('id' => $q['id'], 'name' => $q['name'], 'have' => $have));
         }
         return $result;
     }
 
-    public function updateStock($groupName = null, $id = null, $exists = false){
+    public function updateStock($groupName = null, $id = null, $have = false){
         if($groupName === null or $id === null){
             return Utils::getErrorJson('invalid parameter.');
         }
         $escGroupName = Utils::sqlEscape($groupName);
-        $exists = Utils::getNumFromBool($exists);
-        if($this->db->exec("UPDATE '${escGroupName}' SET 'exists'=${exists} WHERE id=${id}")){
+        $have = Utils::getNumFromBool($have);
+        if($this->db->exec("UPDATE '${escGroupName}' SET have=${have} WHERE id=${id}")){
             return $this->getStocks($groupName);
         }else{
             return Utils::getErrorJson('SQLite3 error. could not update stock.');

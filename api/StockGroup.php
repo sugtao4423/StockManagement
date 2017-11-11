@@ -14,7 +14,7 @@ class StockGroup{
             return Utils::getErrorJson('invalid parameter.');
         }
         $groupName = Utils::sqlEscape($groupName);
-        if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, 'exists' INTEGER)")){
+        if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, have INTEGER)")){
             return $this->getStockGroups();
         }else{
             return Utils::getErrorJson('SQLite3 error. could not create table.');
