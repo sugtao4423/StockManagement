@@ -53,6 +53,7 @@ function stockGroup2Table(json){
     input.id = NEW_STOCK_GROUP_INPUT_ID;
     input.style.display = 'none';
     input.setAttribute('onkeydown', 'if(window.event.keyCode == 13) clickAddStockGroup();');
+    input.placeholder = 'グループ名';
     var button = addtr.insertCell(-1).appendChild(document.createElement('button'));
     button.type = 'button';
     button.className = 'btn btn-info';

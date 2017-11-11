@@ -68,6 +68,7 @@ function stocks2Table(json){
     input.id = NEW_STOCK_INPUT_ID;
     input.style.display = 'none';
     input.setAttribute('onkeydown', 'if(window.event.keyCode == 13) clickAddStock();');
+    input.placeholder = '名前';
     var button = addtr.insertCell(-1).appendChild(document.createElement('button'));
     button.type = 'button';
     button.className = 'btn btn-info';
