@@ -1,8 +1,14 @@
 <?php
+require_once(dirname(__FILE__) . '/Config.php');
+
 class Utils{
 
     public static function sqlEscape($str){
         return str_replace("'", "''", $str);
+    }
+
+    public static function getDBname($category){
+        return DB_DIR . '/' . $category . '.sqlite3';
     }
 
     public static function getNumFromBool($bool){

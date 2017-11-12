@@ -18,12 +18,14 @@ if(Config::$USE_AUTHORIZE){
     }
 }
 
+require_once('./Category.php');
 require_once('./StockGroup.php');
 require_once('./Stock.php');
 
-define('DB_LOCATION', './database.sqlite3');
+if(!file_exists(DB_DIR))
+    mkdir(DB_DIR);
 
-$db = new SQLite3(DB_LOCATION);
+$catDB = new SQLite3(CATDB_LOCATION);
 
 $result = null;
 
@@ -57,7 +59,15 @@ echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 
 function doPost(){
-    global $db;
+    if($_POST['f'] == 'create_category'){
+        global $catDB;
+        return (new Category($catDB))->createCategory($_POST['category_name']);
+    }else{
+        if(!isset($_POST['category_name']))
+            return null;
+        $db = new SQLite3(Utils::getDBname($_POST['category_name']));
+    }
+
     if(isset($_POST['f'])){
         switch($_POST['f']){
         case 'create_stock_group':
@@ -70,7 +80,15 @@ function doPost(){
 }
 
 function doGet(){
-    global $db;
+    if($_GET['f'] == 'get_categories'){
+        global $catDB;
+        return (new Category($catDB))->getCategories();
+    }else{
+        if(!isset($_GET['category_name']))
+            return null;
+        $db = new SQLite3(Utils::getDBname($_GET['category_name']));
+    }
+
     if(isset($_GET['f'])){
         switch($_GET['f']){
         case 'get_stock_groups':
@@ -83,8 +101,11 @@ function doGet(){
 }
 
 function doPut(){
-    global $db;
     parse_str(file_get_contents('php://input'), $_PUT);
+    if(!isset($_PUT['category_name']))
+        return null;
+    $db = new SQLite3(Utils::getDBname($_PUT['category_name']));
+
     if(isset($_PUT['f'])){
         switch($_PUT['f']){
         case 'update_stock':
@@ -95,8 +116,16 @@ function doPut(){
 }
 
 function doDelete(){
-    global $db;
     parse_str(file_get_contents('php://input'), $_DELETE);
+    if($_DELETE['f'] == 'delete_category'){
+        global $catDB;
+        return (new Category($catDB))->deleteCategory($_DELETE['category_name']);
+    }else{
+        if(!isset($_DELETE['category_name']))
+            return null;
+        $db = new SQLite3(Utils::getDBname($_DELETE['category_name']));
+    }
+
     if(isset($_DELETE['f'])){
         switch($_DELETE['f']){
         case 'delete_stock_group':
