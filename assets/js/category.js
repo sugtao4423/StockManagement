@@ -1,16 +1,16 @@
-const NEW_STOCK_GROUP_INPUT_ID = 'newStockGroupInput';
+const NEW_CATEGORY_INPUT_ID = 'newCategoryInput';
 
-function echoStockGroups(){
-    get({'f': 'get_stock_groups', 'category_name': CATEGORY_NAME}, function(data){
-        stockGroup2Table(data);
+function echoCategories(){
+    get({'f': 'get_categories'}, function(data){
+        categories2Table(data);
     });
 }
 
-function clickAddStockGroup(){
-    var input = document.getElementById(NEW_STOCK_GROUP_INPUT_ID);
+function clickAddCategory(){
+    var input = document.getElementById(NEW_CATEGORY_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_stock_group', 'group_name': input.value, 'category_name': CATEGORY_NAME}, function(data){
-            stockGroup2Table(data);
+        post({'f': 'create_category', 'category_name': input.value}, function(data){
+            categories2Table(data);
         });
     }else{
         if(input.style.display == 'none'){
@@ -22,7 +22,7 @@ function clickAddStockGroup(){
     }
 }
 
-function stockGroup2Table(json){
+function categories2Table(json){
     var tableParent = document.getElementById(TABLE_PARENT_ID);
     while(tableParent.firstChild)
         tableParent.removeChild(tableParent.firstChild);
@@ -33,35 +33,35 @@ function stockGroup2Table(json){
 
     var thead = table.appendChild(document.createElement('thead'));
     var tr = thead.insertRow(-1);
-    tr.appendChild(document.createElement('th')).innerHTML = 'グループ名';
+    tr.appendChild(document.createElement('th')).innerHTML = 'カテゴリー';
     tr.appendChild(document.createElement('th')).innerHTML = '件数';
 
     var tbody = table.appendChild(document.createElement('tbody'));
-    for(var i in json.stock_groups){
-        var name = json.stock_groups[i].name;
-        var itemCount = json.stock_groups[i].itemCount;
+    for(var i in json.categories){
+        var name = json.categories[i].name;
+        var itemCount = json.categories[i].itemCount;
 
         var tr = tbody.insertRow(-1);
-        tr.setAttribute('data-href', '?cat=' + CATEGORY_NAME + '&group=' + name);
+        tr.setAttribute('data-href', '?cat=' + name);
         tr.insertCell(-1).innerHTML = name;
         tr.insertCell(-1).innerHTML = itemCount;
     }
-    setStockGroupLink();
+    setCategoryLink();
 
     var addtr = tbody.insertRow(-1);
     var input = addtr.insertCell(-1).appendChild(document.createElement('input'));
-    input.id = NEW_STOCK_GROUP_INPUT_ID;
+    input.id = NEW_CATEGORY_INPUT_ID;
     input.style.display = 'none';
-    input.setAttribute('onkeydown', 'if(window.event.keyCode == 13) clickAddStockGroup();');
-    input.placeholder = 'グループ名';
+    input.setAttribute('onkeydown', 'if(window.event.keyCode == 13) clickAddCategory();');
+    input.placeholder = 'カテゴリー名';
     var button = addtr.insertCell(-1).appendChild(document.createElement('button'));
     button.type = 'button';
     button.className = 'btn btn-info';
-    button.setAttribute('onclick', 'clickAddStockGroup();');
+    button.setAttribute('onclick', 'clickAddCategory();');
     button.innerHTML = 'Add';
 }
 
-function setStockGroupLink(){
+function setCategoryLink(){
     var tr = document.querySelectorAll('tbody > tr');
     for(var i = 0; i < tr.length; i++){
         tr[i].addEventListener('click', function(){
