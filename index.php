@@ -56,7 +56,7 @@ if(Config::$USE_AUTHORIZE){
             $escCatName = str_replace("'", "\\'", $catName);
             $escGroupName = str_replace("'", "\\'", $groupName);
             if($catName and $groupName){
-                echo "<h1>${catName} > {$_GET['group']}</h1>";
+                echo "<h1><a href=\"./?cat=${catName}\">${catName}</a> > {$_GET['group']}</h1>";
                 echo '<script>';
                     echo "const CATEGORY_NAME = '${escCatName}';";
                     echo "const GROUP_NAME = '${escGroupName}';";
