@@ -61,6 +61,14 @@ function stockGroup2Table(json){
     button.innerHTML = 'Add';
 }
 
+function delCategory(){
+    if(confirm(CATEGORY_NAME + '\n削除してもよろしいですか？')){
+        del({'f': 'delete_category', 'category_name': CATEGORY_NAME}, function(data){
+            window.location = '.';
+        });
+    }
+}
+
 function setStockGroupLink(){
     var tr = document.querySelectorAll('tbody > tr');
     for(var i = 0; i < tr.length; i++){

@@ -85,6 +85,11 @@ if(Config::$USE_AUTHORIZE){
                 echo '<button type="button" class="btn btn-danger"';
                 echo "onclick=\"delGroup('${escName}');\">グループ削除</button>";
                 echo '</div>';
+            }else if($catName){
+                echo '<div style="float:right; margin-top:40px;">';
+                echo '<button type="button" class="btn btn-danger"';
+                echo 'onclick="delCategory();">カテゴリー削除</button>';
+                echo '</div>';
             }
         ?>
     </div>
