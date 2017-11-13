@@ -33,8 +33,12 @@ function categories2Table(json){
 
     var thead = table.appendChild(document.createElement('thead'));
     var tr = thead.insertRow(-1);
-    tr.appendChild(document.createElement('th')).innerHTML = 'カテゴリー';
-    tr.appendChild(document.createElement('th')).innerHTML = '件数';
+    var nameth = tr.appendChild(document.createElement('th'));
+    nameth.innerHTML = 'カテゴリー';
+    nameth.className = 'col-xs-9';
+    var countth = tr.appendChild(document.createElement('th'));
+    countth.innerHTML = '件数';
+    countth.className = 'col-xs-3';
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.categories){
