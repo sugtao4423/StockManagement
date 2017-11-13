@@ -29,8 +29,9 @@ class StockGroup{
         $result = Utils::getSuccessJson('stock_groups', array());
         while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)){
             $groupName = Utils::sqlEscape($table['name']);
-            $itemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}'");
-            array_push($result['stock_groups'], array('name' => $table['name'], 'itemCount' => $itemCount));
+            $totalItemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}'");
+            $haveItemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}' WHERE have > 0");
+            array_push($result['stock_groups'], array('name' => $table['name'], 'totalItemCount' => $totalItemCount, 'haveItemCount' => $haveItemCount));
         }
         return $result;
     }
