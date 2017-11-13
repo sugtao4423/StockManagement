@@ -34,17 +34,18 @@ function stockGroup2Table(json){
     var thead = table.appendChild(document.createElement('thead'));
     var tr = thead.insertRow(-1);
     tr.appendChild(document.createElement('th')).innerHTML = 'グループ名';
-    tr.appendChild(document.createElement('th')).innerHTML = '件数';
+    tr.appendChild(document.createElement('th')).innerHTML = '所持 / 全件数';
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.stock_groups){
         var name = json.stock_groups[i].name;
-        var itemCount = json.stock_groups[i].itemCount;
+        var totalItemCount = json.stock_groups[i].totalItemCount;
+        var haveItemCount = json.stock_groups[i].haveItemCount;
 
         var tr = tbody.insertRow(-1);
         tr.setAttribute('data-href', '?cat=' + CATEGORY_NAME + '&group=' + name);
         tr.insertCell(-1).innerHTML = name;
-        tr.insertCell(-1).innerHTML = itemCount;
+        tr.insertCell(-1).innerHTML = `${haveItemCount} / ${totalItemCount}`;
     }
     setStockGroupLink();
 
