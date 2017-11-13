@@ -9,7 +9,7 @@ function echoStockGroups(){
 function clickAddStockGroup(){
     var input = document.getElementById(NEW_STOCK_GROUP_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_stock_group', 'group_name': input.value, 'category_name': CATEGORY_NAME}, function(data){
+        post({'f': 'create_stock_group', 'category_name': CATEGORY_NAME, 'group_name': input.value}, function(data){
             stockGroup2Table(data);
         });
     }else{

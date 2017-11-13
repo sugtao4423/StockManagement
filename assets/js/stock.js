@@ -2,7 +2,7 @@ const NEW_STOCK_INPUT_ID = 'newStockInput';
 const EDIT_BTN_ID = 'editBtn';
 
 function echoStocks(){
-    get({'f': 'get_stocks', 'group_name': GROUP_NAME, 'category_name': CATEGORY_NAME}, function(data){
+    get({'f': 'get_stocks', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME}, function(data){
         stocks2Table(data);
     });
 }
@@ -10,7 +10,7 @@ function echoStocks(){
 function clickAddStock(){
     var input = document.getElementById(NEW_STOCK_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_stock', 'group_name': GROUP_NAME, 'stock_name': input.value, 'category_name': CATEGORY_NAME}, function(data){
+        post({'f': 'create_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'stock_name': input.value}, function(data){
             stocks2Table(data);
         });
     }else{
@@ -24,7 +24,7 @@ function clickAddStock(){
 }
 
 function clickCheckbox(checkbox){
-    put({'f': 'update_stock', 'group_name': GROUP_NAME, 'id': checkbox.getAttribute('data-id'), 'have': checkbox.checked, 'category_name': CATEGORY_NAME}, function(data){
+    put({'f': 'update_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'id': checkbox.getAttribute('data-id'), 'have': checkbox.checked}, function(data){
         stocks2Table(data);
     });
 }
@@ -120,7 +120,7 @@ function clearStockDelBtn(){
 
 function delStock(stockName, id){
     if(confirm(stockName + '\n削除してもよろしいですか？')){
-        del({'f': 'delete_stock', 'group_name': GROUP_NAME, 'id': id, 'category_name': CATEGORY_NAME}, function(data){
+        del({'f': 'delete_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'id': id}, function(data){
             stocks2Table(data);
         });
     }
@@ -128,7 +128,7 @@ function delStock(stockName, id){
 
 function delGroup(){
     if(confirm(GROUP_NAME + '\n削除してもよろしいですか？')){
-        del({'f': 'delete_stock_group', 'group_name': GROUP_NAME, 'category_name': CATEGORY_NAME}, function(data){
+        del({'f': 'delete_stock_group', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME}, function(data){
             window.location = '.';
         });
     }
