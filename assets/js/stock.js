@@ -129,7 +129,7 @@ function delStock(stockName, id){
 function delGroup(){
     if(confirm(GROUP_NAME + '\n削除してもよろしいですか？')){
         del({'f': 'delete_stock_group', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME}, function(data){
-            window.location = '.';
+            window.location = './?cat=' + CATEGORY_NAME;
         });
     }
 }
