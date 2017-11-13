@@ -80,10 +80,10 @@ if(Config::$USE_AUTHORIZE){
                 $escName = str_replace("'", "\\'", $groupName);
                 echo '<div style="float:right; margin-top:40px;">';
                 echo '<button type="button" class="btn btn-warning" id="editBtn"';
-                echo "onclick=\"clickEditStock('${escName}');\">編集</button>";
+                echo 'onclick="clickEditStock();">編集</button>';
                 echo '&emsp;';
                 echo '<button type="button" class="btn btn-danger"';
-                echo "onclick=\"delGroup('${escName}');\">グループ削除</button>";
+                echo 'onclick="delGroup();">グループ削除</button>';
                 echo '</div>';
             }else if($catName){
                 echo '<div style="float:right; margin-top:40px;">';
