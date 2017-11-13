@@ -71,7 +71,7 @@ if(Config::$USE_AUTHORIZE){
                     echo '<script>';
                         echo "const CATEGORY_NAME = '${escCatName}';";
                         echo "const GROUP_NAME = '${escGroupName}';";
-                        echo "echoStocks('${escGroupName}');";
+                        echo 'echoStocks();';
                     echo '</script>';
                 }
             }
