@@ -32,13 +32,12 @@ if(Config::$USE_AUTHORIZE){
     <?php
         $catName = isset($_GET['cat']) ? $_GET['cat'] : null;
         $groupName = isset($_GET['group']) ? $_GET['group'] : null;
-        if(!$catName){
-            echo '<script src="./assets/js/category.js" charset="UTF-8"></script>';
+        if($catName and $groupName){
+            echo '<script src="./assets/js/stock.js" charset="UTF-8"></script>';
+        }else if($catName){
+            echo '<script src="./assets/js/stockGroup.js" charset="UTF-8"></script>';
         }else{
-            if(!$groupName)
-                echo '<script src="./assets/js/stockGroup.js" charset="UTF-8"></script>';
-            else
-                echo '<script src="./assets/js/stock.js" charset="UTF-8"></script>';
+            echo '<script src="./assets/js/category.js" charset="UTF-8"></script>';
         }
     ?>
   </head>
@@ -54,26 +53,24 @@ if(Config::$USE_AUTHORIZE){
     <div class="container">
         <?php
             global $catName, $groupName;
-            if(!$catName){
+            $escCatName = str_replace("'", "\\'", $catName);
+            $escGroupName = str_replace("'", "\\'", $groupName);
+            if($catName and $groupName){
+                echo "<h1>${catName} > {$_GET['group']}</h1>";
+                echo '<script>';
+                    echo "const CATEGORY_NAME = '${escCatName}';";
+                    echo "const GROUP_NAME = '${escGroupName}';";
+                    echo 'echoStocks();';
+                echo '</script>';
+            }else if($catName){
+                echo "<h1>${catName}</h1>";
+                echo '<script>';
+                    echo "const CATEGORY_NAME = '${escCatName}';";
+                    echo 'echoStockGroups();';
+                echo '</script>';
+            }else{
                 echo '<h1>在庫管理</h1>';
                 echo '<script>echoCategories();</script>';
-            }else{
-                $escCatName = str_replace("'", "\\'", $catName);
-                if(!$groupName){
-                    echo "<h1>${catName}</h1>";
-                    echo '<script>';
-                        echo "const CATEGORY_NAME = '${escCatName}';";
-                        echo 'echoStockGroups();';
-                    echo '</script>';
-                }else{
-                    $escGroupName = str_replace("'", "\\'", $groupName);
-                    echo "<h1>${catName} > {$_GET['group']}</h1>";
-                    echo '<script>';
-                        echo "const CATEGORY_NAME = '${escCatName}';";
-                        echo "const GROUP_NAME = '${escGroupName}';";
-                        echo 'echoStocks();';
-                    echo '</script>';
-                }
             }
         ?>
         <div id="content"></div>
