@@ -33,8 +33,12 @@ function stockGroup2Table(json){
 
     var thead = table.appendChild(document.createElement('thead'));
     var tr = thead.insertRow(-1);
-    tr.appendChild(document.createElement('th')).innerHTML = 'グループ名';
-    tr.appendChild(document.createElement('th')).innerHTML = '所持 / 全件数';
+    var nameth = tr.appendChild(document.createElement('th'));
+    nameth.innerHTML = 'グループ名';
+    nameth.className = 'col-xs-10';
+    var countth = tr.appendChild(document.createElement('th'));
+    countth.innerHTML = '所持 / 全件数';
+    countth.className = 'col-xs-2';
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.stock_groups){

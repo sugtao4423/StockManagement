@@ -40,12 +40,12 @@ function stocks2Table(json){
 
     var thead = table.appendChild(document.createElement('thead'));
     var tr = thead.insertRow(-1);
-    var nametd = tr.appendChild(document.createElement('th'));
-    nametd.innerHTML = '名前';
-    nametd.className = 'col-xs-10';
-    var havetd = tr.appendChild(document.createElement('th'));
-    havetd.innerHTML = '所持';
-    havetd.className = 'col-xs-2';
+    var nameth = tr.appendChild(document.createElement('th'));
+    nameth.innerHTML = '名前';
+    nameth.className = 'col-xs-10';
+    var haveth = tr.appendChild(document.createElement('th'));
+    haveth.innerHTML = '所持';
+    haveth.className = 'col-xs-2';
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.stocks){
