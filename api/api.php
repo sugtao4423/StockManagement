@@ -68,7 +68,11 @@ function doPost(){
     }else{
         if(!isset($_POST['category_name']))
             return null;
-        $db = new SQLite3(Utils::getDBname($_POST['category_name']));
+        $dbPath = Utils::getDBname($_POST['category_name']);
+        if(file_exists($dbPath))
+            $db = new SQLite3($dbPath);
+        else
+            return Utils::getErrorJson('error. there are no database.');
     }
 
     switch($_POST['f']){
@@ -90,7 +94,11 @@ function doGet(){
     }else{
         if(!isset($_GET['category_name']))
             return null;
-        $db = new SQLite3(Utils::getDBname($_GET['category_name']));
+        $dbPath = Utils::getDBname($_GET['category_name']);
+        if(file_exists($dbPath))
+            $db = new SQLite3($dbPath);
+        else
+            return Utils::getErrorJson('error. there are no database.');
     }
 
     switch($_GET['f']){
@@ -107,7 +115,12 @@ function doPut(){
     if(!isset($_PUT['f']) or !isset($_PUT['category_name']))
         return null;
 
-    $db = new SQLite3(Utils::getDBname($_PUT['category_name']));
+    $dbPath = Utils::getDBname($_PUT['category_name']);
+    if(file_exists($dbPath))
+        $db = new SQLite3($dbPath);
+    else
+        return Utils::getErrorJson('error. there are no database.');
+
     switch($_PUT['f']){
     case 'update_stock':
         return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['have']);
@@ -126,7 +139,11 @@ function doDelete(){
     }else{
         if(!isset($_DELETE['category_name']))
             return null;
-        $db = new SQLite3(Utils::getDBname($_DELETE['category_name']));
+        $dbPath = Utils::getDBname($_DELETE['category_name']);
+        if(file_exists($dbPath))
+            $db = new SQLite3($dbPath);
+        else
+            return Utils::getErrorJson('error. there are no database.');
     }
 
     switch($_DELETE['f']){
