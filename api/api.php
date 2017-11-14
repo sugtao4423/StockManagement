@@ -59,6 +59,9 @@ echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 
 function doPost(){
+    if(!isset($_POST['f']))
+        return null;
+
     if($_POST['f'] == 'create_category'){
         global $catDB;
         return (new Category($catDB))->createCategory($_POST['category_name']);
@@ -68,18 +71,19 @@ function doPost(){
         $db = new SQLite3(Utils::getDBname($_POST['category_name']));
     }
 
-    if(isset($_POST['f'])){
-        switch($_POST['f']){
-        case 'create_stock_group':
-            return (new StockGroup($db))->createStockGroup($_POST['group_name']);
-        case 'create_stock':
-            return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['have']);
-        }
+    switch($_POST['f']){
+    case 'create_stock_group':
+        return (new StockGroup($db))->createStockGroup($_POST['group_name']);
+    case 'create_stock':
+        return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['have']);
     }
     return null;
 }
 
 function doGet(){
+    if(!isset($_GET['f']))
+        return null;
+
     if($_GET['f'] == 'get_categories'){
         global $catDB;
         return (new Category($catDB))->getCategories();
@@ -89,34 +93,33 @@ function doGet(){
         $db = new SQLite3(Utils::getDBname($_GET['category_name']));
     }
 
-    if(isset($_GET['f'])){
-        switch($_GET['f']){
-        case 'get_stock_groups':
-            return (new StockGroup($db))->getStockGroups();
-        case 'get_stocks':
-            return (new Stock($db))->getStocks($_GET['group_name']);
-        }
+    switch($_GET['f']){
+    case 'get_stock_groups':
+        return (new StockGroup($db))->getStockGroups();
+    case 'get_stocks':
+        return (new Stock($db))->getStocks($_GET['group_name']);
     }
     return null;
 }
 
 function doPut(){
     parse_str(file_get_contents('php://input'), $_PUT);
-    if(!isset($_PUT['category_name']))
+    if(!isset($_PUT['f']) or !isset($_PUT['category_name']))
         return null;
-    $db = new SQLite3(Utils::getDBname($_PUT['category_name']));
 
-    if(isset($_PUT['f'])){
-        switch($_PUT['f']){
-        case 'update_stock':
-            return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['have']);
-        }
+    $db = new SQLite3(Utils::getDBname($_PUT['category_name']));
+    switch($_PUT['f']){
+    case 'update_stock':
+        return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['have']);
     }
     return null;
 }
 
 function doDelete(){
     parse_str(file_get_contents('php://input'), $_DELETE);
+    if(!isset($_DELETE['f']))
+        return null;
+
     if($_DELETE['f'] == 'delete_category'){
         global $catDB;
         return (new Category($catDB))->deleteCategory($_DELETE['category_name']);
@@ -126,13 +129,11 @@ function doDelete(){
         $db = new SQLite3(Utils::getDBname($_DELETE['category_name']));
     }
 
-    if(isset($_DELETE['f'])){
-        switch($_DELETE['f']){
-        case 'delete_stock_group':
-            return (new StockGroup($db))->deleteStockGroup($_DELETE['group_name']);
-        case 'delete_stock':
-            return (new Stock($db))->deleteStock($_DELETE['group_name'], $_DELETE['id']);
-        }
+    switch($_DELETE['f']){
+    case 'delete_stock_group':
+        return (new StockGroup($db))->deleteStockGroup($_DELETE['group_name']);
+    case 'delete_stock':
+        return (new Stock($db))->deleteStock($_DELETE['group_name'], $_DELETE['id']);
     }
     return null;
 }
