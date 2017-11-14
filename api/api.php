@@ -68,7 +68,7 @@ function doPost(){
     }else{
         if(!isset($_POST['category_name']))
             return null;
-        $dbPath = Utils::getDBname($_POST['category_name']);
+        $dbPath = Utils::getDBpath($_POST['category_name']);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else
@@ -94,7 +94,7 @@ function doGet(){
     }else{
         if(!isset($_GET['category_name']))
             return null;
-        $dbPath = Utils::getDBname($_GET['category_name']);
+        $dbPath = Utils::getDBpath($_GET['category_name']);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else
@@ -115,7 +115,7 @@ function doPut(){
     if(!isset($_PUT['f']) or !isset($_PUT['category_name']))
         return null;
 
-    $dbPath = Utils::getDBname($_PUT['category_name']);
+    $dbPath = Utils::getDBpath($_PUT['category_name']);
     if(file_exists($dbPath))
         $db = new SQLite3($dbPath);
     else
@@ -139,7 +139,7 @@ function doDelete(){
     }else{
         if(!isset($_DELETE['category_name']))
             return null;
-        $dbPath = Utils::getDBname($_DELETE['category_name']);
+        $dbPath = Utils::getDBpath($_DELETE['category_name']);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else

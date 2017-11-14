@@ -7,7 +7,7 @@ class Utils{
         return str_replace("'", "''", $str);
     }
 
-    public static function getDBname($category){
+    public static function getDBpath($category){
         return DB_DIR . '/' . $category . '.sqlite3';
     }
 

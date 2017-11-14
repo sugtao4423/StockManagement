@@ -31,7 +31,7 @@ class Category{
         }
         $result = Utils::getSuccessJson('categories', array());
         while ($q = $query->fetchArray(SQLITE3_ASSOC)){
-            $groupDB = new SQLite3(Utils::getDBname($q['name']));
+            $groupDB = new SQLite3(Utils::getDBpath($q['name']));
             $itemCount = $groupDB->querySingle("SELECT COUNT(*) FROM sqlite_master WHERE type='table'");
             array_push($result['categories'], array('name' => $q['name'], 'itemCount' => $itemCount));
         }
@@ -44,7 +44,7 @@ class Category{
         }
         $escCatName = Utils::sqlEscape($catName);
         if($this->db->exec("DELETE FROM category WHERE NAME='${escCatName}'")){
-            if(unlink(DB_DIR . '/' . $catName . '.sqlite3')){
+            if(unlink(Utils::getDBpath($catName))){
                 return $this->getCategories();
             }else{
                 return Utils::getErrorJson('error. could not delete database file.');
