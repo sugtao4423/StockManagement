@@ -77,6 +77,7 @@ function delCategory(){
 function setStockGroupLink(){
     var tr = document.querySelectorAll('tbody > tr');
     for(var i = 0; i < tr.length; i++){
+        tr[i].style.cursor = 'pointer';
         tr[i].addEventListener('click', function(){
             window.location = this.getAttribute('data-href');
         });
