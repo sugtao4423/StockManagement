@@ -1,6 +1,5 @@
 <?php
 
-define('CATDB_LOCATION', './category.sqlite3');
 define('DB_DIR', './db/');
 
 class Config{

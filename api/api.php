@@ -25,8 +25,6 @@ require_once('./Stock.php');
 if(!file_exists(DB_DIR))
     mkdir(DB_DIR);
 
-$catDB = new SQLite3(CATDB_LOCATION);
-
 $result = null;
 
 switch($_SERVER['REQUEST_METHOD']){
@@ -63,8 +61,7 @@ function doPost(){
         return null;
 
     if($_POST['f'] == 'create_category'){
-        global $catDB;
-        return (new Category($catDB))->createCategory($_POST['category_name']);
+        return (new Category())->createCategory($_POST['category_name']);
     }else{
         if(!isset($_POST['category_name']))
             return null;
@@ -89,8 +86,7 @@ function doGet(){
         return null;
 
     if($_GET['f'] == 'get_categories'){
-        global $catDB;
-        return (new Category($catDB))->getCategories();
+        return (new Category())->getCategories();
     }else{
         if(!isset($_GET['category_name']))
             return null;
@@ -134,8 +130,7 @@ function doDelete(){
         return null;
 
     if($_DELETE['f'] == 'delete_category'){
-        global $catDB;
-        return (new Category($catDB))->deleteCategory($_DELETE['category_name']);
+        return (new Category())->deleteCategory($_DELETE['category_name']);
     }else{
         if(!isset($_DELETE['category_name']))
             return null;
