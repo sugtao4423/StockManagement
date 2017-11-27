@@ -1,6 +1,6 @@
 <?php
-require_once('./Utils.php');
-require_once('./Config.php');
+require_once(dirname(__FILE__) . '/Utils.php');
+require_once(dirname(__FILE__) . '/Config.php');
 
 class Category{
 

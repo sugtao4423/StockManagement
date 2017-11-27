@@ -1,6 +1,6 @@
 <?php
-require_once('./Config.php');
-require_once('./Utils.php');
+require_once(dirname(__FILE__) . '/Config.php');
+require_once(dirname(__FILE__) . '/Utils.php');
 
 if(Config::$USE_AUTHORIZE){
     if (!isset($_SERVER['PHP_AUTH_USER'])){
@@ -18,9 +18,9 @@ if(Config::$USE_AUTHORIZE){
     }
 }
 
-require_once('./Category.php');
-require_once('./StockGroup.php');
-require_once('./Stock.php');
+require_once(dirname(__FILE__) . '/Category.php');
+require_once(dirname(__FILE__) . '/StockGroup.php');
+require_once(dirname(__FILE__) . '/Stock.php');
 
 if(!file_exists(DB_DIR))
     mkdir(DB_DIR);
