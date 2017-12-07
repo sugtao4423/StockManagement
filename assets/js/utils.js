@@ -1,27 +1,26 @@
 const TABLE_PARENT_ID = 'content';
 const TABLE_ID = 'table';
 
-function post(params, func){
-    access('POST', params, func);
+function post(path, func){
+    access(path, 'POST', func);
 }
 
-function get(params, func){
-    access('GET', params, func);
+function get(path, func){
+    access(path, 'GET', func);
 }
 
-function put(params, func){
-    access('PUT', params, func);
+function put(path, func){
+    access(path, 'PUT', func);
 }
 
-function del(params, func){
-    access('DELETE', params, func);
+function del(path, func){
+    access(path, 'DELETE', func);
 }
 
-function access(method, params, func){
+function access(path, method, func){
     $.ajax({
-        url: './api/api.php',
+        url: './api/' + path,
         type: method,
-        data: params,
         dataType: 'json',
         success: func
     });

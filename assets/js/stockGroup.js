@@ -1,7 +1,8 @@
 const NEW_STOCK_GROUP_INPUT_ID = 'newStockGroupInput';
 
 function echoStockGroups(){
-    get({'f': 'get_stock_groups', 'category_name': CATEGORY_NAME}, function(data){
+    var uri = '/' + encodeURIComponent(CATEGORY_NAME);
+    get(uri, function(data){
         stockGroup2Table(data);
     });
 }
@@ -9,7 +10,8 @@ function echoStockGroups(){
 function clickAddStockGroup(){
     var input = document.getElementById(NEW_STOCK_GROUP_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_stock_group', 'category_name': CATEGORY_NAME, 'group_name': input.value}, function(data){
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(input.value);
+        post(uri, function(data){
             stockGroup2Table(data);
         });
     }else{
@@ -68,7 +70,8 @@ function stockGroup2Table(json){
 
 function delCategory(){
     if(confirm(CATEGORY_NAME + '\n削除してもよろしいですか？')){
-        del({'f': 'delete_category', 'category_name': CATEGORY_NAME}, function(data){
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME);
+        del(uri, function(data){
             window.location = '.';
         });
     }

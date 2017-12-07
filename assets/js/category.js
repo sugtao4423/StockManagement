@@ -1,7 +1,7 @@
 const NEW_CATEGORY_INPUT_ID = 'newCategoryInput';
 
 function echoCategories(){
-    get({'f': 'get_categories'}, function(data){
+    get('', function(data){
         categories2Table(data);
     });
 }
@@ -9,7 +9,8 @@ function echoCategories(){
 function clickAddCategory(){
     var input = document.getElementById(NEW_CATEGORY_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_category', 'category_name': input.value}, function(data){
+        var uri = '/' + encodeURIComponent(input.value);
+        post(uri, function(data){
             categories2Table(data);
         });
     }else{

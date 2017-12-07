@@ -2,7 +2,8 @@ const NEW_STOCK_INPUT_ID = 'newStockInput';
 const EDIT_BTN_ID = 'editBtn';
 
 function echoStocks(){
-    get({'f': 'get_stocks', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME}, function(data){
+    var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME);
+    get(uri, function(data){
         stocks2Table(data);
     });
 }
@@ -10,7 +11,8 @@ function echoStocks(){
 function clickAddStock(){
     var input = document.getElementById(NEW_STOCK_INPUT_ID);
     if(input.value.length > 0){
-        post({'f': 'create_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'stock_name': input.value}, function(data){
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + encodeURIComponent(input.value);
+        post(uri, function(data){
             stocks2Table(data);
         });
     }else{
@@ -24,7 +26,8 @@ function clickAddStock(){
 }
 
 function clickCheckbox(checkbox){
-    put({'f': 'update_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'id': checkbox.getAttribute('data-id'), 'have': checkbox.checked}, function(data){
+    var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + checkbox.getAttribute('data-id') + '/' + checkbox.checked;
+    put(uri, function(data){
         stocks2Table(data);
     });
 }
@@ -120,7 +123,8 @@ function clearStockDelBtn(){
 
 function delStock(stockName, id){
     if(confirm(stockName + '\n削除してもよろしいですか？')){
-        del({'f': 'delete_stock', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME, 'id': id}, function(data){
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + id;
+        del(uri, function(data){
             stocks2Table(data);
         });
     }
@@ -128,7 +132,8 @@ function delStock(stockName, id){
 
 function delGroup(){
     if(confirm(GROUP_NAME + '\n削除してもよろしいですか？')){
-        del({'f': 'delete_stock_group', 'category_name': CATEGORY_NAME, 'group_name': GROUP_NAME}, function(data){
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME);
+        del(uri, function(data){
             window.location = './?cat=' + CATEGORY_NAME;
         });
     }
