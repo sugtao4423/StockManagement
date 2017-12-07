@@ -27,18 +27,26 @@ if(!file_exists(DB_DIR))
 
 $result = null;
 
-switch($_SERVER['REQUEST_METHOD']){
+preg_match('|' . dirname($_SERVER['SCRIPT_NAME']) . '/(.*)|', $_SERVER['REQUEST_URI'], $m);
+$query = explode('/', $m[1]);
+$query = array_filter($query, 'strlen');
+$query = array_values($query);
+for($i = 0; $i < count($query); $i++){
+    $query[$i] = urldecode($query[$i]);
+}
+
+switch(strtoupper($_SERVER['REQUEST_METHOD'])){
     case 'POST':
-        $result = doPost();
+        $result = doPost($query);
         break;
     case 'GET':
-        $result = doGet();
+        $result = doGet($query);
         break;
     case 'PUT':
-        $result = doPut();
+        $result = doPut($query);
         break;
     case 'DELETE':
-        $result = doDelete();
+        $result = doDelete($query);
         break;
 }
 
@@ -56,96 +64,84 @@ header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 
-function doPost(){
-    if(!isset($_POST['f']))
-        return null;
-
-    if($_POST['f'] == 'create_category'){
-        return (new Category())->createCategory($_POST['category_name']);
-    }else{
-        if(!isset($_POST['category_name']))
-            return null;
-        $dbPath = Utils::getDBpath($_POST['category_name']);
+function doPost($query){
+    switch(count($query)){
+    case 1:
+        return (new Category())->createCategory($query[0]);
+    case 2:
+    case 3:
+        $dbPath = Utils::getDBpath($query[0]);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else
             return Utils::getErrorJson('error. there are no database.');
+        break;
     }
 
-    switch($_POST['f']){
-    case 'create_stock_group':
-        return (new StockGroup($db))->createStockGroup($_POST['group_name']);
-    case 'create_stock':
-        return (new Stock($db))->createStock($_POST['group_name'], $_POST['stock_name'], $_POST['have']);
+    switch(count($query)){
+    case 2:
+        return (new StockGroup($db))->createStockGroup($query[1]);
+    case 3:
+        return (new Stock($db))->createStock($query[1], $query[2]);
     }
     return null;
 }
 
-function doGet(){
-    if(!isset($_GET['f']))
-        return null;
-
-    if($_GET['f'] == 'get_categories'){
+function doGet($query){
+    switch(count($query)){
+    case 0:
         return (new Category())->getCategories();
-    }else{
-        if(!isset($_GET['category_name']))
-            return null;
-        $dbPath = Utils::getDBpath($_GET['category_name']);
+    case 1:
+    case 2:
+        $dbPath = Utils::getDBpath($query[0]);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else
             return Utils::getErrorJson('error. there are no database.');
+        break;
     }
 
-    switch($_GET['f']){
-    case 'get_stock_groups':
+    switch(count($query)){
+    case 1:
         return (new StockGroup($db))->getStockGroups();
-    case 'get_stocks':
-        return (new Stock($db))->getStocks($_GET['group_name']);
+    case 2:
+        return (new Stock($db))->getStocks($query[1]);
     }
     return null;
 }
 
-function doPut(){
-    parse_str(file_get_contents('php://input'), $_PUT);
-    if(!isset($_PUT['f']) or !isset($_PUT['category_name']))
+function doPut($query){
+    if(count($query) !== 4)
         return null;
 
-    $dbPath = Utils::getDBpath($_PUT['category_name']);
+    $dbPath = Utils::getDBpath($query[0]);
     if(file_exists($dbPath))
         $db = new SQLite3($dbPath);
     else
         return Utils::getErrorJson('error. there are no database.');
 
-    switch($_PUT['f']){
-    case 'update_stock':
-        return (new Stock($db))->updateStock($_PUT['group_name'], $_PUT['id'], $_PUT['have']);
-    }
-    return null;
+    return (new Stock($db))->updateStock($query[1], $query[2], $query[3]);
 }
 
-function doDelete(){
-    parse_str(file_get_contents('php://input'), $_DELETE);
-    if(!isset($_DELETE['f']))
-        return null;
-
-    if($_DELETE['f'] == 'delete_category'){
-        return (new Category())->deleteCategory($_DELETE['category_name']);
-    }else{
-        if(!isset($_DELETE['category_name']))
-            return null;
-        $dbPath = Utils::getDBpath($_DELETE['category_name']);
+function doDelete($query){
+    switch(count($query)){
+    case 1:
+        return (new Category())->deleteCategory($query[0]);
+    case 2:
+    case 3:
+        $dbPath = Utils::getDBpath($query[0]);
         if(file_exists($dbPath))
             $db = new SQLite3($dbPath);
         else
             return Utils::getErrorJson('error. there are no database.');
+        break;
     }
 
-    switch($_DELETE['f']){
-    case 'delete_stock_group':
-        return (new StockGroup($db))->deleteStockGroup($_DELETE['group_name']);
-    case 'delete_stock':
-        return (new Stock($db))->deleteStock($_DELETE['group_name'], $_DELETE['id']);
+    switch(count($query)){
+    case 2:
+        return (new StockGroup($db))->deleteStockGroup($query[1]);
+    case 3:
+        return (new Stock($db))->deleteStock($query[1], $query[2]);
     }
     return null;
 }
