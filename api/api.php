@@ -31,9 +31,7 @@ preg_match('|' . dirname($_SERVER['SCRIPT_NAME']) . '/(.*)|', $_SERVER['REQUEST_
 $query = explode('/', $m[1]);
 $query = array_filter($query, 'strlen');
 $query = array_values($query);
-for($i = 0; $i < count($query); $i++){
-    $query[$i] = urldecode($query[$i]);
-}
+$query = array_map('urldecode', $query);
 
 switch(strtoupper($_SERVER['REQUEST_METHOD'])){
     case 'POST':
