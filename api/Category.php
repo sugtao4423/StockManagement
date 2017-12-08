@@ -8,6 +8,9 @@ class Category{
         if($catName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
+        if(strpos($catName, '/') !== false){
+            return Utils::getErrorJson('error. can not use \'/\' in category name.');
+        }
         if(touch(DB_DIR . $catName . '.sqlite3')){
             return $this->getCategories();
         }else{
