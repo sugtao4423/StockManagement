@@ -50,7 +50,7 @@ switch(strtoupper($_SERVER['REQUEST_METHOD'])){
 
 if($result === null){
     $result = Utils::getErrorJson('invalid parameter.');
-    http_response_code(501);
+    http_response_code(400);
 }else{
     if($result['success'] == true){
         http_response_code(200);
