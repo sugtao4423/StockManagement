@@ -25,6 +25,14 @@ class Utils{
         return ($num == true or $num > 0);
     }
 
+    public static function isOnlySpaces($subject){
+        if(preg_match('/^(\s|　)+$/', $subject) === 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public static function getSuccessJson($dataName = null, $data = null){
         if($dataName === null or $data === null){
             return array('success' => true);

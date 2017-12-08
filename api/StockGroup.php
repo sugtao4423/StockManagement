@@ -13,6 +13,9 @@ class StockGroup{
         if($groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
+        if(Utils::isOnlySpaces($groupName)){
+            return Utils::getErrorJson('error. can not create stock group of only space string.');
+        }
         $groupName = Utils::sqlEscape($groupName);
         if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, have INTEGER)")){
             return $this->getStockGroups();

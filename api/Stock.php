@@ -13,6 +13,9 @@ class Stock{
         if($groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
+        if(Utils::isOnlySpaces($stockName)){
+            return Utils::getErrorJson('error. can not create stock of only space string.');
+        }
         $escGroupName = Utils::sqlEscape($groupName);
         $stockName = Utils::sqlEscape($stockName);
         $have = Utils::getNumFromBool($have);

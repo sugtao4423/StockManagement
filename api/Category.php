@@ -11,6 +11,9 @@ class Category{
         if(strpos($catName, '/') !== false){
             return Utils::getErrorJson('error. can not use \'/\' in category name.');
         }
+        if(Utils::isOnlySpaces($catName)){
+            return Utils::getErrorJson('error. can not create category of only space string.');
+        }
         if(touch(DB_DIR . $catName . '.sqlite3')){
             return $this->getCategories();
         }else{
