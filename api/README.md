@@ -7,6 +7,13 @@ location /api {
 }
 ```
 
+## Status Code
+以下のHTTPステータスコードを返します
+* **200 OK**: リクエストが正常に処理された
+* **400 Bad Request**: 無効な要求
+* **401 Unauthorized**: 認証が必要
+* **500 Internal Server Error**: 内部エラー
+
 ## Resources
 ### /
 **Methods**
