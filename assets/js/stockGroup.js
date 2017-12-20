@@ -70,10 +70,12 @@ function stockGroup2Table(json){
 
 function delCategory(){
     if(confirm(CATEGORY_NAME + '\n削除してもよろしいですか？')){
-        var uri = '/' + encodeURIComponent(CATEGORY_NAME);
-        del(uri, function(data){
-            window.location = '.';
-        });
+        if(confirm('ほんとに ' + CATEGORY_NAME + ' を削除してもよろしいですか？')){
+            var uri = '/' + encodeURIComponent(CATEGORY_NAME);
+            del(uri, function(data){
+                window.location = '.';
+            });
+        }
     }
 }
 
