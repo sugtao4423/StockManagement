@@ -41,6 +41,9 @@ class Stock{
             array_push($result['stocks'],
                 array('id' => $q['id'], 'name' => $q['name'], 'have' => $have));
         }
+        foreach($result['stocks'] as $k => $v)
+            $sort[$k] = $v['name'];
+        array_multisort($sort, SORT_ASC, $result['stocks']);
         return $result;
     }
 

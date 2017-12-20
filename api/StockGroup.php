@@ -36,6 +36,9 @@ class StockGroup{
             $haveItemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}' WHERE have > 0");
             array_push($result['stock_groups'], array('name' => $table['name'], 'totalItemCount' => $totalItemCount, 'haveItemCount' => $haveItemCount));
         }
+        foreach($result['stock_groups'] as $k => $v)
+            $sort[$k] = $v['name'];
+        array_multisort($sort, SORT_ASC, $result['stock_groups']);
         return $result;
     }
 
