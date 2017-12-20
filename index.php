@@ -78,7 +78,7 @@ if(Config::$USE_AUTHORIZE){
             global $catName, $groupName;
             if($catName and $groupName){
                 $escName = str_replace("'", "\\'", $groupName);
-                echo '<div style="float:right; margin-top:40px;">';
+                echo '<div class="footButtons">';
                 echo '<button type="button" class="btn btn-warning" id="editBtn"';
                 echo 'onclick="clickEditStock();">編集</button>';
                 echo '&emsp;';
@@ -86,7 +86,7 @@ if(Config::$USE_AUTHORIZE){
                 echo 'onclick="delGroup();">グループ削除</button>';
                 echo '</div>';
             }else if($catName){
-                echo '<div style="float:right; margin-top:40px;">';
+                echo '<div class="footButtons">';
                 echo '<button type="button" class="btn btn-danger"';
                 echo 'onclick="delCategory();">カテゴリー削除</button>';
                 echo '</div>';
