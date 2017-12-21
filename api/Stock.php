@@ -43,7 +43,7 @@ class Stock{
         }
         foreach($result['stocks'] as $k => $v)
             $sort[$k] = $v['name'];
-        array_multisort($sort, SORT_ASC, $result['stocks']);
+        array_multisort($sort, SORT_ASC, SORT_NATURAL, $result['stocks']);
         return $result;
     }
 
