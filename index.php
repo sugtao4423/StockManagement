@@ -47,6 +47,9 @@ if(Config::$USE_AUTHORIZE){
             <div class="navbar-header">
                 <a class="navbar-brand" href=".">在庫管理</a>
             </div>
+            <div class="navbar-form navbar-right">
+                <input class="form-control navbar-right" id="searchBox" type="text" onKeyUp="searchText(this)" />
+            </div>
         </div>
     </nav>
 
