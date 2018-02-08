@@ -48,10 +48,16 @@ function stockGroup2Table(json){
         var totalItemCount = json.stock_groups[i].totalItemCount;
         var haveItemCount = json.stock_groups[i].haveItemCount;
 
+        var isComplete = (haveItemCount === totalItemCount);
+
         var tr = tbody.insertRow(-1);
         tr.setAttribute('data-href', '?cat=' + CATEGORY_NAME + '&group=' + name);
         tr.insertCell(-1).innerHTML = name;
-        tr.insertCell(-1).innerHTML = `${haveItemCount} / ${totalItemCount}`;
+        if(isComplete){
+            tr.insertCell(-1).innerHTML = '✔';
+        }else{
+            tr.insertCell(-1).innerHTML = `${haveItemCount} / ${totalItemCount}`;
+        }
     }
     setStockGroupLink();
 
