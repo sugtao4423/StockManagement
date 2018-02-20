@@ -16,7 +16,7 @@ if(Config::$USE_AUTHORIZE){
     }
 }
 ?>
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="ja">
   <head>
     <title>Stock Management</title>
