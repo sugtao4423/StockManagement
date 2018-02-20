@@ -15,6 +15,8 @@ if(Config::$USE_AUTHORIZE){
         }
     }
 }
+
+require_once('./htmlUtils.php');
 ?>
 <!DOCTYPE HTML>
 <html lang="ja">
@@ -29,17 +31,7 @@ if(Config::$USE_AUTHORIZE){
 
     <link href="./assets/style.css" rel="stylesheet">
     <script src="./assets/js/utils.js" charset="UTF-8"></script>
-    <?php
-        $catName = isset($_GET['cat']) ? $_GET['cat'] : null;
-        $groupName = isset($_GET['group']) ? $_GET['group'] : null;
-        if($catName and $groupName){
-            echo '<script src="./assets/js/stock.js" charset="UTF-8"></script>';
-        }else if($catName){
-            echo '<script src="./assets/js/stockGroup.js" charset="UTF-8"></script>';
-        }else{
-            echo '<script src="./assets/js/category.js" charset="UTF-8"></script>';
-        }
-    ?>
+    <?= HtmlUtils::getScriptTag($_GET); ?>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -54,47 +46,9 @@ if(Config::$USE_AUTHORIZE){
     </nav>
 
     <div class="container">
-        <?php
-            global $catName, $groupName;
-            $escCatName = str_replace("'", "\\'", $catName);
-            $escGroupName = str_replace("'", "\\'", $groupName);
-            if($catName and $groupName){
-                echo "<h1><a href=\"./?cat=${catName}\">${catName}</a> > {$_GET['group']}</h1>";
-                echo '<script>';
-                    echo "const CATEGORY_NAME = '${escCatName}';";
-                    echo "const GROUP_NAME = '${escGroupName}';";
-                    echo 'echoStocks();';
-                echo '</script>';
-            }else if($catName){
-                echo "<h1>${catName}</h1>";
-                echo '<script>';
-                    echo "const CATEGORY_NAME = '${escCatName}';";
-                    echo 'echoStockGroups();';
-                echo '</script>';
-            }else{
-                echo '<h1>在庫管理</h1>';
-                echo '<script>echoCategories();</script>';
-            }
-        ?>
+        <?= HtmlUtils::getShowTableScript($_GET); ?>
         <div id="content"></div>
-        <?php
-            global $catName, $groupName;
-            if($catName and $groupName){
-                $escName = str_replace("'", "\\'", $groupName);
-                echo '<div class="footButtons">';
-                echo '<button type="button" class="btn btn-warning" id="editBtn"';
-                echo 'onclick="clickEditStock();">編集</button>';
-                echo '&emsp;';
-                echo '<button type="button" class="btn btn-danger"';
-                echo 'onclick="delGroup();">グループ削除</button>';
-                echo '</div>';
-            }else if($catName){
-                echo '<div class="footButtons">';
-                echo '<button type="button" class="btn btn-danger"';
-                echo 'onclick="delCategory();">カテゴリー削除</button>';
-                echo '</div>';
-            }
-        ?>
+        <?= HtmlUtils::getFootHtml($_GET); ?>
     </div>
 
   </body>
