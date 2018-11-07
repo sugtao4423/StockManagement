@@ -26,7 +26,7 @@ function clickAddStock(){
 }
 
 function clickCheckbox(checkbox){
-    var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + checkbox.getAttribute('data-id') + '/' + checkbox.checked;
+    var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + encodeURIComponent(checkbox.getAttribute('data-name')) + '/' + checkbox.checked;
     put(uri, function(data){
         stocks2Table(data);
     });
@@ -52,7 +52,6 @@ function stocks2Table(json){
 
     var tbody = table.appendChild(document.createElement('tbody'));
     for(var i in json.stocks){
-        var id = json.stocks[i].id;
         var name = json.stocks[i].name;
         var have = json.stocks[i].have;
 
@@ -61,7 +60,6 @@ function stocks2Table(json){
         var checkbox = tr.insertCell(-1).appendChild(document.createElement('input'));
         checkbox.type = 'checkbox';
         checkbox.checked = have;
-        checkbox.setAttribute('data-id', id);
         checkbox.setAttribute('data-name', name);
         checkbox.setAttribute('onclick', 'clickCheckbox(this);');
     }
@@ -104,11 +102,10 @@ function setStockDelBtn(){
         checkboxs[i].style.display = 'none';
         var stockDelBtn = checkboxs[i].parentNode.appendChild(document.createElement('button'));
         stockDelBtn.className = 'btn btn-danger btn-sm';
-        stockDelBtn.setAttribute('data-id', checkboxs[i].getAttribute('data-id'));
+        stockDelBtn.setAttribute('data-name', checkboxs[i].getAttribute('data-name'));
         stockDelBtn.innerHTML = '削除';
         var escStockName = checkboxs[i].getAttribute('data-name').replace(/'/g, "\\'");
-        var id = checkboxs[i].getAttribute('data-id');
-        stockDelBtn.setAttribute('onclick', `delStock('${escStockName}', ${id});`);
+        stockDelBtn.setAttribute('onclick', `delStock('${escStockName}');`);
     }
 }
 
@@ -121,9 +118,9 @@ function clearStockDelBtn(){
         checkboxs[i].style.display = 'block';
 }
 
-function delStock(stockName, id){
+function delStock(stockName){
     if(confirm(stockName + '\n削除してもよろしいですか？')){
-        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + id;
+        var uri = '/' + encodeURIComponent(CATEGORY_NAME) + '/' + encodeURIComponent(GROUP_NAME) + '/' + encodeURIComponent(stockName);
         del(uri, function(data){
             stocks2Table(data);
         });
