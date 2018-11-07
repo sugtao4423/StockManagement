@@ -9,67 +9,115 @@ class Stock{
         $this->db = $db;
     }
 
-    public function createStock($groupName = null, $stockName = null, $have = false){
-        if($groupName === null or $stockName === null){
+    public function createStock($categoryName = null, $groupName = null, $stockName = null, $have = false){
+        if($categoryName === null or $groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
         if(Utils::isOnlySpaces($stockName)){
             return Utils::getErrorJson('error. can not create stock of only space string.');
         }
-        $escGroupName = Utils::sqlEscape($groupName);
-        $stockName = Utils::sqlEscape($stockName);
+
         $have = Utils::getNumFromBool($have);
-        if($this->db->exec("INSERT INTO '${escGroupName}' (name, have) values('${stockName}', ${have})")){
-            return $this->getStocks($groupName);
-        }else{
-            return Utils::getErrorJson('SQLite3 error. could not add stock.');
+        $sql = 'INSERT INTO stocks(groupId, name, have)
+                VALUES(
+                    (SELECT groups.id FROM groups
+                    INNER JOIN categories ON categories.id = groups.categoryId
+                    WHERE categories.name = :categoryName
+                    AND groups.name = :groupName),
+                :stockName, :have)';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $stmt->bindValue(':stockName', $stockName, SQLITE3_TEXT);
+        $stmt->bindValue(':have', $have, SQLITE3_INTEGER);
+        $exec = $stmt->execute();
+        if($exec === false){
+            return Utils::getErrorJson('SQLite3 error. could not create stock.');
         }
+
+        return $this->getStocks($categoryName, $groupName);
     }
 
-    public function getStocks($groupName){
-        if($groupName === null){
+    public function getStocks($categoryName = null, $groupName = null){
+        if($categoryName === null or $groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = Utils::sqlEscape($groupName);
-        $query = $this->db->query("SELECT * FROM '${groupName}'");
-        if(!$query){
+
+        $sql = 'SELECT
+                stocks.name, stocks.have
+                FROM stocks
+                INNER JOIN groups ON groups.id = stocks.groupId
+                INNER JOIN categories ON categories.id = groups.categoryId
+                WHERE categories.name = :categoryName
+                AND groups.name = :groupName
+                ORDER BY stocks.name ASC';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $query = $stmt->execute();
+        if($query === false){
             return Utils::getErrorJson('SQLite3 error. could not get stocks.');
         }
-        $result = Utils::getSuccessJson('stocks', array());
-        while ($q = $query->fetchArray(SQLITE3_ASSOC)){
-            $have = Utils::getBoolFromNum($q['have']);
-            array_push($result['stocks'],
-                array('id' => $q['id'], 'name' => $q['name'], 'have' => $have));
+
+        $result = Utils::getSuccessJson('stocks', []);
+        while($q = $query->fetchArray(SQLITE3_NUM)){
+            $result['stocks'][] = [
+                'name' => $q[0],
+                'have' => Utils::getBoolFromNum($q[1])
+            ];
         }
-        foreach($result['stocks'] as $k => $v)
-            $sort[$k] = $v['name'];
-        array_multisort($sort, SORT_ASC, SORT_NATURAL, $result['stocks']);
         return $result;
     }
 
-    public function updateStock($groupName = null, $id = null, $have = false){
-        if($groupName === null or $id === null){
+    public function updateStock($categoryName = null, $groupName = null, $stockName = null, $have = false){
+        if($categoryName === null or $groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $escGroupName = Utils::sqlEscape($groupName);
+
         $have = Utils::getNumFromBool($have);
-        if($this->db->exec("UPDATE '${escGroupName}' SET have=${have} WHERE id=${id}")){
-            return $this->getStocks($groupName);
-        }else{
+        $sql = 'UPDATE stocks SET have = :have
+                WHERE groupId
+                    = (SELECT groups.id FROM groups WHERE categoryId
+                        = (SELECT categories.id FROM categories
+                        WHERE categories.name = :categoryName)
+                    AND groups.name = :groupName)
+                AND stocks.name = :stockName';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':have', $have, SQLITE3_INTEGER);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $stmt->bindValue(':stockName', $stockName, SQLITE3_TEXT);
+        $exec = $stmt->execute();
+        if($exec === false){
             return Utils::getErrorJson('SQLite3 error. could not update stock.');
         }
+
+        return $this->getStocks($categoryName, $groupName);
     }
 
-    public function deleteStock($groupName = null, $id = null){
-        if($groupName === null or $id === null){
+    public function deleteStock($categoryName = null, $groupName = null, $stockName = null){
+        if($categoryName === null or $groupName === null or $stockName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $escGroupName = Utils::sqlEscape($groupName);
-        if($this->db->exec("DELETE FROM '${escGroupName}' WHERE id=${id}")){
-            return $this->getStocks($groupName);
-        }else{
-            return Utils::getErrorJson('SQLite3 error. could not delete stock.');
+
+        $sql = 'DELETE FROM stocks
+            WHERE groupId
+                = (SELECT groups.id FROM groups
+                WHERE groups.categoryId
+                    = (SELECT categories.id FROM categories
+                    WHERE categories.name = :categoryName)
+                AND groups.name = :groupName)
+            AND stocks.name = :stockName';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $stmt->bindValue(':stockName', $stockName, SQLITE3_TEXT);
+        $exec = $stmt->execute();
+        if($exec === false){
+            Utils::getErrorJson('SQLite3 error. could not delete stock.');
         }
+
+        return $this->getStocks($categoryName, $groupName);
     }
 
 }

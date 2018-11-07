@@ -22,9 +22,6 @@ require_once(dirname(__FILE__) . '/Category.php');
 require_once(dirname(__FILE__) . '/StockGroup.php');
 require_once(dirname(__FILE__) . '/Stock.php');
 
-if(!file_exists(DB_DIR))
-    mkdir(DB_DIR);
-
 $result = null;
 
 preg_match('|' . dirname($_SERVER['SCRIPT_NAME']) . '/(.*)|', $_SERVER['REQUEST_URI'], $m);
@@ -32,6 +29,11 @@ $query = explode('/', $m[1]);
 $query = array_filter($query, 'strlen');
 $query = array_values($query);
 $query = array_map('urldecode', $query);
+
+$db = new SQLite3(Config::$DB_FILE);
+$db->exec('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, name TEXT UNIQUE)');
+$db->exec('CREATE TABLE IF NOT EXISTS groups(id INTEGER PRIMARY KEY, categoryId INTEGER, name TEXT, UNIQUE(categoryId, name))');
+$db->exec('CREATE TABLE IF NOT EXISTS stocks(groupId INTEGER, name TEXT, have INTEGER, UNIQUE(groupId, name))');
 
 switch(strtoupper($_SERVER['REQUEST_METHOD'])){
     case 'POST':
@@ -63,84 +65,52 @@ echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 
 function doPost($query){
+    global $db;
     switch(count($query)){
     case 1:
-        return (new Category())->createCategory($query[0]);
+        return (new Category($db))->createCategory($query[0]);
     case 2:
+        return (new StockGroup($db))->createStockGroup($query[0], $query[1]);
     case 3:
-        $dbPath = Utils::getDBpath($query[0]);
-        if(file_exists($dbPath))
-            $db = new SQLite3($dbPath);
-        else
-            return Utils::getErrorJson('error. there are no database.');
-        break;
+        return (new Stock($db))->createStock($query[0], $query[1], $query[2]);
+    default:
+        return null;
     }
-
-    switch(count($query)){
-    case 2:
-        return (new StockGroup($db))->createStockGroup($query[1]);
-    case 3:
-        return (new Stock($db))->createStock($query[1], $query[2]);
-    }
-    return null;
 }
 
 function doGet($query){
+    global $db;
     switch(count($query)){
     case 0:
-        return (new Category())->getCategories();
+        return (new Category($db))->getCategories();
     case 1:
+        return (new StockGroup($db))->getStockGroups($query[0]);
     case 2:
-        $dbPath = Utils::getDBpath($query[0]);
-        if(file_exists($dbPath))
-            $db = new SQLite3($dbPath);
-        else
-            return Utils::getErrorJson('error. there are no database.');
-        break;
+        return (new Stock($db))->getStocks($query[0], $query[1]);
+    default:
+        return null;
     }
-
-    switch(count($query)){
-    case 1:
-        return (new StockGroup($db))->getStockGroups();
-    case 2:
-        return (new Stock($db))->getStocks($query[1]);
-    }
-    return null;
 }
 
 function doPut($query){
-    if(count($query) !== 4)
+    if(count($query) !== 4){
         return null;
-
-    $dbPath = Utils::getDBpath($query[0]);
-    if(file_exists($dbPath))
-        $db = new SQLite3($dbPath);
-    else
-        return Utils::getErrorJson('error. there are no database.');
-
-    return (new Stock($db))->updateStock($query[1], $query[2], $query[3]);
+    }
+    global $db;
+    return (new Stock($db))->updateStock($query[0], $query[1], $query[2], $query[3]);
 }
 
 function doDelete($query){
+    global $db;
     switch(count($query)){
     case 1:
-        return (new Category())->deleteCategory($query[0]);
+        return (new Category($db))->deleteCategory($query[0]);
     case 2:
+        return (new StockGroup($db))->deleteStockGroup($query[0], $query[1]);
     case 3:
-        $dbPath = Utils::getDBpath($query[0]);
-        if(file_exists($dbPath))
-            $db = new SQLite3($dbPath);
-        else
-            return Utils::getErrorJson('error. there are no database.');
-        break;
+        return (new Stock($db))->deleteStock($query[0], $query[1], $query[2]);
+    default:
+        return null;
     }
-
-    switch(count($query)){
-    case 2:
-        return (new StockGroup($db))->deleteStockGroup($query[1]);
-    case 3:
-        return (new Stock($db))->deleteStock($query[1], $query[2]);
-    }
-    return null;
 }
 

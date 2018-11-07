@@ -31,14 +31,11 @@ location /api {
 * GET: グループ内にあるアイテムの `id` `名前` `所持の状態(boolean)` 返却
 * DELETE: グループを削除し `/:categoryName` のGETを返却
 
-### /:categoryName/:groupName/:stockId
-* `stockId`: アイテムID
-
+### /:categoryName/:groupName/:stockName
 **Methods**
 * DELETE: アイテムを削除し `/:categoryName/:groupName` のGETを返却
 
-### /:categoryName/:groupName/:stockId/:have
-* `stockId`: アイテムID
+### /:categoryName/:groupName/:stockName/:have
 * `have`: 所持の状態。（boolean or 0/1）
 
 **Methods**

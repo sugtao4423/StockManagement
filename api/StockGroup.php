@@ -9,49 +9,93 @@ class StockGroup{
         $this->db = $db;
     }
 
-    public function createStockGroup($groupName = null){
-        if($groupName === null){
+    public function createStockGroup($categoryName = null, $groupName = null){
+        if($categoryName === null or $groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        if(Utils::isOnlySpaces($groupName)){
+        if(Utils::isOnlySpaces($categoryName) or Utils::isOnlySpaces($groupName)){
             return Utils::getErrorJson('error. can not create stock group of only space string.');
         }
-        $groupName = Utils::sqlEscape($groupName);
-        if($this->db->exec("CREATE TABLE '${groupName}' (id INTEGER PRIMARY KEY, name TEXT, have INTEGER)")){
-            return $this->getStockGroups();
-        }else{
-            return Utils::getErrorJson('SQLite3 error. could not create table.');
+
+        $sql = 'INSERT INTO groups(categoryId, name)
+                VALUES ((SELECT id FROM categories WHERE name = :categoryName),
+                :name)';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':name', $groupName, SQLITE3_TEXT);
+        $exec = $stmt->execute();
+        if($exec === false){
+            return Utils::getErrorJson('SQLite3 error. could not create stock group.');
         }
+
+        return $this->getStockGroups($categoryName);
     }
 
-    public function getStockGroups(){
-        $tablesquery = $this->db->query("SELECT name FROM sqlite_master WHERE type='table'");
-        if(!$tablesquery){
+    public function getStockGroups($categoryName = null){
+        if($categoryName === null){
+            return Utils::getErrorJson('invalid parameter.');
+        }
+        $result = Utils::getSuccessJson('stock_groups', []);
+
+        $sql = 'SELECT
+                groups.name,
+                    (SELECT COUNT(*) FROM stocks WHERE stocks.groupId = groups.id),
+                    (SELECT COUNT(*) FROM stocks WHERE stocks.groupId = groups.id AND have > 0)
+                FROM groups
+                INNER JOIN categories ON categories.id = groups.categoryId
+                WHERE categories.name = :categoryName
+                ORDER BY groups.name ASC';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $query = $stmt->execute();
+        if($query === false){
             return Utils::getErrorJson('SQLite3 error. could not get stock groups.');
         }
-        $result = Utils::getSuccessJson('stock_groups', array());
-        while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)){
-            $groupName = Utils::sqlEscape($table['name']);
-            $totalItemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}'");
-            $haveItemCount = $this->db->querySingle("SELECT COUNT(*) FROM '${groupName}' WHERE have > 0");
-            array_push($result['stock_groups'], array('name' => $table['name'], 'totalItemCount' => $totalItemCount, 'haveItemCount' => $haveItemCount));
+
+        while($q = $query->fetchArray(SQLITE3_NUM)){
+            $result['stock_groups'][] = [
+                'name' => $q[0],
+                'totalItemCount' => $q[1],
+                'haveItemCount' => $q[2]
+            ];
         }
-        foreach($result['stock_groups'] as $k => $v)
-            $sort[$k] = $v['name'];
-        array_multisort($sort, SORT_ASC, SORT_NATURAL, $result['stock_groups']);
         return $result;
     }
 
-    public function deleteStockGroup($groupName = null){
-        if($groupName === null){
+    public function deleteStockGroup($categoryName = null, $groupName = null){
+        if($categoryName === null or $groupName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $groupName = Utils::sqlEscape($groupName);
-        if($this->db->exec("DROP TABLE '${groupName}'")){
-            return $this->getStockGroups();
-        }else{
-            return Utils::getErrorJson('SQLite3 error. could not drop table.');
+
+        $sql = 'DELETE FROM stocks
+                WHERE stocks.groupId
+                IN (SELECT groups.id FROM groups
+                    INNER JOIN categories
+                    ON categories.id = groups.categoryId
+                    WHERE categories.name = :categoryName
+                    AND groups.name = :groupName)';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $exec = $stmt->execute();
+        if($exec === false){
+            return Utils::getErrorJson('SQLite3 error. could not delete stocks.');
         }
+
+        $sql = 'DELETE FROM groups
+                WHERE groups.categoryId
+                = (SELECT categories.id FROM categories
+                    WHERE categories.name = :categoryName)
+                AND groups.name = :groupName';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':categoryName', $categoryName, SQLITE3_TEXT);
+        $stmt->bindValue(':groupName', $groupName, SQLITE3_TEXT);
+        $exec = $stmt->execute();
+        if($exec === false){
+            return Utils::getErrorJson('SQLite3 error. could not delete stock group.');
+        }
+
+        return $this->getStockGroups($categoryName);
     }
 
 }

@@ -3,20 +3,13 @@ require_once(dirname(__FILE__) . '/Config.php');
 
 class Utils{
 
-    public static function sqlEscape($str){
-        return str_replace("'", "''", $str);
-    }
-
-    public static function getDBpath($category){
-        return DB_DIR . '/' . $category . '.sqlite3';
-    }
-
     public static function getNumFromBool($bool){
         if($bool === true or $bool === 'true'){
             return 1;
         }else{
-            if(is_int($bool) and $bool > 0)
+            if(is_int($bool) and $bool > 0){
                 return 1;
+            }
         }
         return 0;
     }
@@ -35,14 +28,14 @@ class Utils{
 
     public static function getSuccessJson($dataName = null, $data = null){
         if($dataName === null or $data === null){
-            return array('success' => true);
+            return ['success' => true];
         }else{
-            return array('success' => true, $dataName => $data);
+            return ['success' => true, $dataName => $data];
         }
     }
 
     public static function getErrorJson($message){
-        return array('success' => false, 'message' => $message);
+        return ['success' => false, 'message' => $message];
     }
 
 }
