@@ -30,7 +30,7 @@ class Category{
     }
 
     public function getCategories(){
-        $result = Utils::getSuccessJson('categories', []);
+        $result = [];
 
         $sql = 'SELECT
                 categories.name,
@@ -43,12 +43,12 @@ class Category{
         }
 
         while($q = $query->fetchArray(SQLITE3_NUM)){
-            $result['categories'][] = [
+            $result[] = [
                 'name' => $q[0],
                 'itemCount' => $q[1]
             ];
         }
-        return $result;
+        return Utils::getSuccessJson('categories', $result);
     }
 
     public function deleteCategory($categoryName){

@@ -59,14 +59,14 @@ class Stock{
             return Utils::getErrorJson('SQLite3 error. could not get stocks.');
         }
 
-        $result = Utils::getSuccessJson('stocks', []);
+        $result = [];
         while($q = $query->fetchArray(SQLITE3_NUM)){
-            $result['stocks'][] = [
+            $result[] = [
                 'name' => $q[0],
                 'have' => Utils::getBoolFromNum($q[1])
             ];
         }
-        return $result;
+        return Utils::getSuccessJson('stocks', $result);
     }
 
     public function updateStock($categoryName = null, $groupName = null, $stockName = null, $have = false){

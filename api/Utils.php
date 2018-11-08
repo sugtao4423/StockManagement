@@ -26,16 +26,23 @@ class Utils{
         }
     }
 
-    public static function getSuccessJson($dataName = null, $data = null){
-        if($dataName === null or $data === null){
+    public static function getSuccessJson($type = null, $data = null){
+        if($type === null or $data === null){
             return ['success' => true];
         }else{
-            return ['success' => true, $dataName => $data];
+            return [
+                'success' => true,
+                'type' => $type,
+                'data' => $data
+            ];
         }
     }
 
     public static function getErrorJson($message){
-        return ['success' => false, 'message' => $message];
+        return [
+            'success' => false,
+            'message' => $message
+        ];
     }
 
 }

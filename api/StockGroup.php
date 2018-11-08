@@ -35,7 +35,7 @@ class StockGroup{
         if($categoryName === null){
             return Utils::getErrorJson('invalid parameter.');
         }
-        $result = Utils::getSuccessJson('stock_groups', []);
+        $result = [];
 
         $sql = 'SELECT
                 groups.name,
@@ -53,13 +53,13 @@ class StockGroup{
         }
 
         while($q = $query->fetchArray(SQLITE3_NUM)){
-            $result['stock_groups'][] = [
+            $result[] = [
                 'name' => $q[0],
                 'totalItemCount' => $q[1],
                 'haveItemCount' => $q[2]
             ];
         }
-        return $result;
+        return Utils::getSuccessJson('groups', $result);
     }
 
     public function deleteStockGroup($categoryName = null, $groupName = null){
