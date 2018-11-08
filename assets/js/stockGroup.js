@@ -43,10 +43,10 @@ function stockGroup2Table(json){
     countth.className = 'col-xs-2';
 
     var tbody = table.appendChild(document.createElement('tbody'));
-    for(var i in json.stock_groups){
-        var name = json.stock_groups[i].name;
-        var totalItemCount = json.stock_groups[i].totalItemCount;
-        var haveItemCount = json.stock_groups[i].haveItemCount;
+    for(var i in json.data){
+        var name = json.data[i].name;
+        var totalItemCount = json.data[i].totalItemCount;
+        var haveItemCount = json.data[i].haveItemCount;
 
         var isComplete = (haveItemCount === totalItemCount);
 

@@ -42,9 +42,9 @@ function categories2Table(json){
     countth.className = 'col-xs-3';
 
     var tbody = table.appendChild(document.createElement('tbody'));
-    for(var i in json.categories){
-        var name = json.categories[i].name;
-        var itemCount = json.categories[i].itemCount;
+    for(var i in json.data){
+        var name = json.data[i].name;
+        var itemCount = json.data[i].itemCount;
 
         var tr = tbody.insertRow(-1);
         tr.setAttribute('data-href', '?cat=' + name);

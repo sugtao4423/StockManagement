@@ -51,9 +51,9 @@ function stocks2Table(json){
     haveth.className = 'col-xs-2';
 
     var tbody = table.appendChild(document.createElement('tbody'));
-    for(var i in json.stocks){
-        var name = json.stocks[i].name;
-        var have = json.stocks[i].have;
+    for(var i in json.data){
+        var name = json.data[i].name;
+        var have = json.data[i].have;
 
         var tr = tbody.insertRow(-1);
         tr.insertCell(-1).innerHTML = name;
