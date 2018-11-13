@@ -3,7 +3,7 @@
 ```
 location /api {
     index api.php;
-    try_files $uri $uri/ /api/api.php?$query_string;
+    rewrite ^/api/ /api/api.php?$query_string last;
 }
 ```
 
