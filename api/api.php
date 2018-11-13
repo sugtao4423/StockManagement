@@ -31,9 +31,9 @@ $query = array_values($query);
 $query = array_map('urldecode', $query);
 
 $db = new SQLite3(Config::$DB_FILE);
-$db->exec('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, name TEXT UNIQUE)');
-$db->exec('CREATE TABLE IF NOT EXISTS groups(id INTEGER PRIMARY KEY, categoryId INTEGER, name TEXT, UNIQUE(categoryId, name))');
-$db->exec('CREATE TABLE IF NOT EXISTS stocks(groupId INTEGER, name TEXT, have INTEGER, UNIQUE(groupId, name))');
+$db->exec('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE)');
+$db->exec('CREATE TABLE IF NOT EXISTS groups(id INTEGER PRIMARY KEY, categoryId INTEGER NOT NULL, name TEXT NOT NULL, UNIQUE(categoryId, name))');
+$db->exec('CREATE TABLE IF NOT EXISTS stocks(groupId INTEGER NOT NULL, name TEXT NOT NULL, have INTEGER NOT NULL, UNIQUE(groupId, name))');
 
 switch(strtoupper($_SERVER['REQUEST_METHOD'])){
     case 'POST':
