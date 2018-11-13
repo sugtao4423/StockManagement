@@ -30,6 +30,10 @@ class Utils{
         if($type === null or $data === null){
             return ['success' => true];
         }else{
+            foreach($data as $d){
+                $sort[] = $d['name'];
+            }
+            array_multisort($sort, SORT_ASC, SORT_NATURAL, $data);
             return [
                 'success' => true,
                 'type' => $type,
