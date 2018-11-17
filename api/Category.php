@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require_once(dirname(__FILE__) . '/Utils.php');
 require_once(dirname(__FILE__) . '/Config.php');
 
@@ -10,10 +12,7 @@ class Category{
         $this->db = $db;
     }
 
-    public function createCategory($categoryName = null){
-        if($categoryName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
+    public function createCategory(string $categoryName): array{
         if(Utils::isOnlySpaces($categoryName)){
             return Utils::getErrorJson('error. can not create category of only space string.');
         }
@@ -29,7 +28,7 @@ class Category{
         return $this->getCategories();
     }
 
-    public function getCategories(){
+    public function getCategories(): array{
         $result = [];
 
         $sql = 'SELECT
@@ -51,11 +50,7 @@ class Category{
         return Utils::getSuccessJson('categories', $result);
     }
 
-    public function deleteCategory($categoryName){
-        if($categoryName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
-
+    public function deleteCategory(string $categoryName): array{
         $sql = 'DELETE FROM stocks
                 WHERE stocks.groupId
                 IN

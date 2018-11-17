@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require_once(dirname(__FILE__) . '/Utils.php');
 
 class Stock{
@@ -9,10 +11,7 @@ class Stock{
         $this->db = $db;
     }
 
-    public function createStock($categoryName = null, $groupName = null, $stockName = null, $have = false){
-        if($categoryName === null or $groupName === null or $stockName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
+    public function createStock(string $categoryName, string $groupName, string $stockName, bool $have = false): array{
         if(Utils::isOnlySpaces($stockName)){
             return Utils::getErrorJson('error. can not create stock of only space string.');
         }
@@ -38,11 +37,7 @@ class Stock{
         return $this->getStocks($categoryName, $groupName);
     }
 
-    public function getStocks($categoryName = null, $groupName = null){
-        if($categoryName === null or $groupName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
-
+    public function getStocks(string $categoryName, string $groupName): array{
         $sql = 'SELECT
                 stocks.name, stocks.have
                 FROM stocks
@@ -63,17 +58,13 @@ class Stock{
         while($q = $query->fetchArray(SQLITE3_NUM)){
             $result[] = [
                 'name' => $q[0],
-                'have' => Utils::getBoolFromNum($q[1])
+                'have' => Utils::getBoolFromString((string)$q[1])
             ];
         }
         return Utils::getSuccessJson('stocks', $result);
     }
 
-    public function updateStock($categoryName = null, $groupName = null, $stockName = null, $have = false){
-        if($categoryName === null or $groupName === null or $stockName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
-
+    public function updateStock(string $categoryName, string $groupName, string $stockName, bool $have = false): array{
         $have = Utils::getNumFromBool($have);
         $sql = 'UPDATE stocks SET have = :have
                 WHERE groupId
@@ -95,11 +86,7 @@ class Stock{
         return $this->getStocks($categoryName, $groupName);
     }
 
-    public function deleteStock($categoryName = null, $groupName = null, $stockName = null){
-        if($categoryName === null or $groupName === null or $stockName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
-
+    public function deleteStock(string $categoryName, string $groupName, string $stockName): array{
         $sql = 'DELETE FROM stocks
             WHERE groupId
                 = (SELECT groups.id FROM groups

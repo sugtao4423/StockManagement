@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require_once(dirname(__FILE__) . '/Config.php');
 require_once(dirname(__FILE__) . '/Utils.php');
 
@@ -64,7 +66,7 @@ header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 
-function doPost($query){
+function doPost(array $query): ?array{
     global $db;
     switch(count($query)){
     case 1:
@@ -78,7 +80,7 @@ function doPost($query){
     }
 }
 
-function doGet($query){
+function doGet(array $query): ?array{
     global $db;
     switch(count($query)){
     case 0:
@@ -92,15 +94,16 @@ function doGet($query){
     }
 }
 
-function doPut($query){
+function doPut(array $query): ?array{
     if(count($query) !== 4){
         return null;
     }
     global $db;
+    $query[3] = Utils::getBoolFromString($query[3]);
     return (new Stock($db))->updateStock($query[0], $query[1], $query[2], $query[3]);
 }
 
-function doDelete($query){
+function doDelete(array $query): ?array{
     global $db;
     switch(count($query)){
     case 1:

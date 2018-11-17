@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require_once(dirname(__FILE__) . '/Utils.php');
 
 class StockGroup{
@@ -9,10 +11,7 @@ class StockGroup{
         $this->db = $db;
     }
 
-    public function createStockGroup($categoryName = null, $groupName = null){
-        if($categoryName === null or $groupName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
+    public function createStockGroup(string $categoryName, string $groupName): array{
         if(Utils::isOnlySpaces($categoryName) or Utils::isOnlySpaces($groupName)){
             return Utils::getErrorJson('error. can not create stock group of only space string.');
         }
@@ -31,10 +30,7 @@ class StockGroup{
         return $this->getStockGroups($categoryName);
     }
 
-    public function getStockGroups($categoryName = null){
-        if($categoryName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
+    public function getStockGroups(string $categoryName): array{
         $result = [];
 
         $sql = 'SELECT
@@ -62,11 +58,7 @@ class StockGroup{
         return Utils::getSuccessJson('groups', $result);
     }
 
-    public function deleteStockGroup($categoryName = null, $groupName = null){
-        if($categoryName === null or $groupName === null){
-            return Utils::getErrorJson('invalid parameter.');
-        }
-
+    public function deleteStockGroup(string $categoryName, string $groupName): array{
         $sql = 'DELETE FROM stocks
                 WHERE stocks.groupId
                 IN (SELECT groups.id FROM groups
