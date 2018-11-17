@@ -3,7 +3,11 @@ const router = new VueRouter({
         {name: 'index', path: '/'},
         {name: 'inCategory', path: '/:category'},
         {name: 'inGroup', path: '/:category/:group'}
-    ]
+    ],
+    scrollBehavior: function(to, from, savedPosition){
+        const positionY = savedPosition ? savedPosition.y : 0;
+        sessionStorage.setItem('positionY', positionY);
+    }
 });
 
 const stockManagement = new Vue({
@@ -28,6 +32,11 @@ const stockManagement = new Vue({
     },
     created: function(){
         this.pageChanged();
+    },
+    updated: function(){
+        if(this.data !== undefined || this.data.length != 0){
+            scrollTo(0, sessionStorage.getItem('positionY'));
+        }
     },
     watch: {
         $route: function(to, from){
