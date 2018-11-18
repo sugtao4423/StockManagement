@@ -25,6 +25,7 @@ const stockManagement = new Vue({
         },
         editing: false,
         modal: {
+            show: false,
             deleteItemName: '',
             isDeleteStock: false,
             confirmInputValue: ''
@@ -134,22 +135,19 @@ const stockManagement = new Vue({
             params = params.concat(checked);
             this.access(params, 'PUT');
         },
-        openModal: function(){
-            this.$refs.modal.style.display = 'block';
-        },
         closeModal: function(){
-            this.$refs.modal.style.display = 'none';
+            this.modal.show = false;
             this.modal.confirmInputValue = '';
         },
         clickCategoryOrGroupDelete: function(){
             this.modal.deleteItemName = this.params.slice(-1)[0];
             this.modal.isDeleteStock = false;
-            this.openModal();
+            this.modal.show = true;
         },
         clickStockDelete: function(itemName){
             this.modal.deleteItemName = itemName;
             this.modal.isDeleteStock = true;
-            this.openModal();
+            this.modal.show = true;
         },
         clickDeleteOnModal: function(){
             if(this.modal.isDeleteStock){

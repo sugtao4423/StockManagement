@@ -9,7 +9,7 @@
     </head>
 
     <body>
-        <div id="stockManagement">
+        <div id="stockManagement" v-cloak>
             <nav class="navbar navbar-default">
                 <div class="container">
                     <div class="navbar-header">
@@ -25,17 +25,15 @@
 
             <div class="container">
                 <div v-if="fetching" class="loader"></div>
-                <h1 v-text="title"></h1>
+                <h1>{{ title }}</h1>
                 <table class="table table-hover" v-show="!fetching">
                     <thead>
                         <tr>
-                            <th
-                                v-bind:class="'col-xs-' + columnWidth"
-                                v-text="columnName1">
+                            <th v-bind:class="'col-xs-' + columnWidth">
+                                {{ columnName1 }}
                             </th>
-                            <th
-                                v-bind:class="'col-xs-' + (12-columnWidth)"
-                                v-text="columnName2">
+                            <th v-bind:class="'col-xs-' + (12-columnWidth)">
+                                {{ columnName2 }}
                             </th>
                         </tr>
                     </thead>
@@ -43,11 +41,12 @@
                         <tr
                             v-for="item in filteredItems"
                             v-on:click="clickTr(item.name)">
-                            <td v-text="item.name"></td>
+                            <td>
+                                {{ item.name }}
+                            </td>
 
-                            <td
-                                v-if="data.type == 'categories' || data.type == 'groups'"
-                                v-text="column2data(item)">
+                            <td v-if="data.type == 'categories' || data.type == 'groups'">
+                                {{ column2data(item) }}
                             </td>
                             <td v-if="data.type == 'stocks'">
                                 <input
@@ -92,21 +91,21 @@
                         class="btn editBtn"
                         v-if="data.type == 'stocks'"
                         v-bind:class="[editing ? 'btn-success' : 'btn-warning']"
-                        v-on:click="editing = !editing"
-                        v-text="editText">
+                        v-on:click="editing = !editing">
+                        {{ editText }}
                     </button>
                     <button
                         type="button"
                         class="btn btn-danger"
                         v-if="data.type == 'groups' || data.type == 'stocks'"
-                        v-on:click="clickCategoryOrGroupDelete()"
-                        v-text="deleteText">
+                        v-on:click="clickCategoryOrGroupDelete()">
+                        {{ deleteText }}
                     </button>
                 </div>
             </div>
 
 
-            <div class="modal" tabindex="-1" ref="modal">
+            <div class="modal" tabindex="-1" v-if="modal.show">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">

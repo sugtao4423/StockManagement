@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+[v-cloak] {
+    display: none;
+}
+
 body {
     font-family:"メイリオ",Meiryo,"ヒラギノ角ゴ Pro W3",Hiragino Kaku Gothic Pro,"ＭＳ Ｐゴシック",sans-serif;
     background: url('./dust_scratches.png');
@@ -46,6 +50,7 @@ body {
 }
 
 .modal {
+    display: block;
     background-color: rgba(0, 0, 0, 0.4);
 }
 .modal-content {
