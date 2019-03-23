@@ -1,70 +1,69 @@
 @charset "UTF-8";
 
 [v-cloak] {
-    display: none;
+  display: none;
 }
 
 body {
-    font-family:"メイリオ",Meiryo,"ヒラギノ角ゴ Pro W3",Hiragino Kaku Gothic Pro,"ＭＳ Ｐゴシック",sans-serif;
-    background: url('./dust_scratches.png');
+  font-family:"メイリオ",Meiryo,"ヒラギノ角ゴ Pro W3",Hiragino Kaku Gothic Pro,"ＭＳ Ｐゴシック",sans-serif;
+  background: url('./dust_scratches.png');
 }
 
 .loader {
-    border: 12px solid #f3f3f3;
-    border-top: 12px solid #3498db;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 1.5s linear infinite;
-    margin: 0 auto;
+  border: 12px solid #f3f3f3;
+  border-top: 12px solid #3498db;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1.5s linear infinite;
+  margin: 0 auto;
 }
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
-    background-color: #e6e6e6;
+  background-color: #e6e6e6;
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 .no-pointer {
-    cursor: auto;
+  cursor: auto;
 }
 
 .footButtons {
-    float: right;
-    margin-top: 40px;
-    margin-bottom: 30px;
+  float: right;
+  margin-top: 40px;
+  margin-bottom: 30px;
 }
 
 .editBtn {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .modal {
-    display: block;
-    background-color: rgba(0, 0, 0, 0.4);
+  display: block;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 .modal-content {
-    margin: 15% auto;
-    animation: fadein 0.5s;
+  margin: 15% auto;
+  animation: fadein 0.5s;
 }
 @keyframes fadein {
-    from {
-        top: -300px;
-        opacity: 0
-    }
-    to {
-        top: 0;
-        opacity: 1
-    }
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
 }
-

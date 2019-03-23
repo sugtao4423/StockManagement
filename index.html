@@ -1,151 +1,119 @@
 <!DOCTYPE HTML>
 <html lang="ja">
-    <head>
-        <title>Stock Management</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></title>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-        <link href="./assets/style.css" rel="stylesheet">
-    </head>
+<head>
+  <title>Stock Management</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  </title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./assets/style.css" rel="stylesheet">
+</head>
 
-    <body>
-        <div id="stockManagement" v-cloak>
-            <nav class="navbar navbar-default">
-                <div class="container">
-                    <div class="navbar-header">
-                        <router-link v-bind:to="{name: 'index'}">
-                            <a class="navbar-brand">在庫管理</a>
-                        </router-link>
-                    </div>
-                    <div class="navbar-form navbar-right">
-                        <input class="form-control navbar-right" id="searchBox" type="text" v-model="filterValue"/>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="container">
-                <div v-if="fetching" class="loader"></div>
-                <h1>{{ title }}</h1>
-                <table class="table table-hover" v-show="!fetching">
-                    <thead>
-                        <tr>
-                            <th v-bind:class="'col-xs-' + columnWidth">
-                                {{ columnName1 }}
-                            </th>
-                            <th v-bind:class="'col-xs-' + (12-columnWidth)">
-                                {{ columnName2 }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody v-bind:class="{pointer: data.type == 'categories' || data.type == 'groups'}">
-                        <tr
-                            v-for="item in filteredItems"
-                            v-on:click="clickTr(item.name)">
-                            <td>
-                                {{ item.name }}
-                            </td>
-
-                            <td v-if="data.type == 'categories' || data.type == 'groups'">
-                                {{ column2data(item) }}
-                            </td>
-                            <td v-if="data.type == 'stocks'">
-                                <input
-                                    type="checkbox"
-                                    v-if="!editing"
-                                    v-on:click="clickCheckbox(item.name, !item.have)"
-                                    v-bind:checked="item.have">
-                                <button
-                                    type="button"
-                                    class="btn btn-danger btn-sm"
-                                    v-if="editing"
-                                    v-on:click="clickStockDelete(item.name)">
-                                    削除
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr class="no-pointer">
-                            <td>
-                                <input
-                                v-show="addInput.show"
-                                v-model="addInput.value"
-                                ref="addInput"
-                                v-bind:placeholder="inputPlaceholder"
-                                v-on:keydown.13="clickAdd()">
-                            </td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn btn-info"
-                                    v-on:click="clickAdd()">
-                                    Add
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="footButtons">
-                    <button
-                        type="button"
-                        class="btn editBtn"
-                        v-if="data.type == 'stocks'"
-                        v-bind:class="[editing ? 'btn-success' : 'btn-warning']"
-                        v-on:click="editing = !editing">
-                        {{ editText }}
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-danger"
-                        v-if="data.type == 'groups' || data.type == 'stocks'"
-                        v-on:click="clickCategoryOrGroupDelete()">
-                        {{ deleteText }}
-                    </button>
-                </div>
-            </div>
-
-
-            <div class="modal" tabindex="-1" v-if="modal.show">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">削除しますか？</h3>
-                        </div>
-                        <div
-                            class="modal-body"
-                            v-if="modal.isDeleteStock">
-                            <p>{{ modal.deleteItemName }} を削除しますか？</p>
-                        </div>
-                        <div
-                            class="modal-body"
-                            v-if="!modal.isDeleteStock">
-                            <p>{{ modal.deleteItemName }} を削除<br />
-                                確認のため名前を入力してください</p>
-                            <input
-                                class="form-control"
-                                v-model="modal.confirmInputValue">
-                        </div>
-                        <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-default"
-                                v-on:click="closeModal()">キャンセル
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-danger"
-                                v-bind:disabled="(!modal.isDeleteStock) && (modal.confirmInputValue != modal.deleteItemName)"
-                                v-on:click="clickDeleteOnModal()">
-                                削除
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<body>
+  <div id="stockManagement" v-cloak>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <router-link v-bind:to="{name: 'index'}">
+            <a class="navbar-brand">在庫管理</a>
+          </router-link>
         </div>
+        <div class="navbar-form navbar-right">
+          <input class="form-control navbar-right" id="searchBox" type="text" v-model="filterValue" />
+        </div>
+      </div>
+    </nav>
 
-        <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
-        <script src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.min.js"></script>
-        <script src="./assets/index.js"></script>
-    </body>
+    <div class="container">
+      <div v-if="fetching" class="loader"></div>
+      <h1>{{ title }}</h1>
+      <table class="table table-hover" v-show="!fetching">
+        <thead>
+          <tr>
+            <th v-bind:class="'col-xs-' + columnWidth">
+              {{ columnName1 }}
+            </th>
+            <th v-bind:class="'col-xs-' + (12-columnWidth)">
+              {{ columnName2 }}
+            </th>
+          </tr>
+        </thead>
+        <tbody v-bind:class="{pointer: data.type == 'categories' || data.type == 'groups'}">
+          <tr v-for="item in filteredItems" v-on:click="clickTr(item.name)">
+            <td>
+              {{ item.name }}
+            </td>
+
+            <td v-if="data.type == 'categories' || data.type == 'groups'">
+              {{ column2data(item) }}
+            </td>
+            <td v-if="data.type == 'stocks'">
+              <input type="checkbox" v-if="!editing" v-on:click="clickCheckbox(item.name, !item.have)"
+                v-bind:checked="item.have">
+              <button type="button" class="btn btn-danger btn-sm" v-if="editing"
+                v-on:click="clickStockDelete(item.name)">
+                削除
+              </button>
+            </td>
+          </tr>
+
+          <tr class="no-pointer">
+            <td>
+              <input v-show="addInput.show" v-model="addInput.value" ref="addInput"
+                v-bind:placeholder="inputPlaceholder" v-on:keydown.13="clickAdd()">
+            </td>
+            <td>
+              <button type="button" class="btn btn-info" v-on:click="clickAdd()">
+                Add
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="footButtons">
+        <button type="button" class="btn editBtn" v-if="data.type == 'stocks'"
+          v-bind:class="[editing ? 'btn-success' : 'btn-warning']" v-on:click="editing = !editing">
+          {{ editText }}
+        </button>
+        <button type="button" class="btn btn-danger" v-if="data.type == 'groups' || data.type == 'stocks'"
+          v-on:click="clickCategoryOrGroupDelete()">
+          {{ deleteText }}
+        </button>
+      </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" v-if="modal.show">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">削除しますか？</h3>
+          </div>
+          <div class="modal-body" v-if="modal.isDeleteStock">
+            <p>{{ modal.deleteItemName }} を削除しますか？</p>
+          </div>
+          <div class="modal-body" v-if="!modal.isDeleteStock">
+            <p>{{ modal.deleteItemName }} を削除<br />
+              確認のため名前を入力してください</p>
+            <input class="form-control" v-model="modal.confirmInputValue">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" v-on:click="closeModal()">キャンセル
+            </button>
+            <button type="button" class="btn btn-danger"
+              v-bind:disabled="(!modal.isDeleteStock) && (modal.confirmInputValue != modal.deleteItemName)"
+              v-on:click="clickDeleteOnModal()">
+              削除
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
+  <script src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.min.js"></script>
+  <script src="./assets/index.js"></script>
+</body>
 </html>
