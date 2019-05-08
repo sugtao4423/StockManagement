@@ -68,7 +68,7 @@ const stockManagement = new Vue({
       this.nextPageChangeNoLoad = nextPageChangeNoLoad;
       let url = './api/';
       urlParams.forEach((val) => {
-        url += `${val}/`;
+        url += encodeURIComponent(val) + '/';
       });
 
       const oldData = this.data;
