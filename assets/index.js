@@ -35,7 +35,7 @@ const stockManagement = new Vue({
     this.pageChanged();
   },
   updated: function() {
-    if(this.data !== undefined || this.data.length != 0) {
+    if(this.data !== undefined && this.data.length != 0 && !this.addInput.show) {
       scrollTo(0, sessionStorage.getItem('positionY'));
     }
   },
