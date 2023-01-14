@@ -22,6 +22,7 @@ class Utils{
     }
 
     public static function getSuccessJson(string $type, array $data): array{
+        $sort = [];
         foreach($data as $d){
             $sort[] = $d['name'];
         }
